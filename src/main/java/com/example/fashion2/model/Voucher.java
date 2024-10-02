@@ -4,14 +4,14 @@ import jakarta.persistence.*;
 import java.sql.Timestamp;
 
 @Entity
-@Table(name = "products")
-public class Product {
+@Table(name = "vouchers")
+public class Voucher {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private String name;
-    private Double price;
+    private String code;
+    private Double ratio;
     private String description;
     private Integer qty;
     private Timestamp deletedAt;
@@ -25,20 +25,20 @@ public class Product {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getCode() {
+        return code;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setCode(String code) {
+        this.code = code;
     }
 
-    public Double getPrice() {
-        return price;
+    public Double getRatio() {
+        return ratio;
     }
 
-    public void setPrice(Double price) {
-        this.price = price;
+    public void setRatio(Double ratio) {
+        this.ratio = ratio;
     }
 
     public String getDescription() {

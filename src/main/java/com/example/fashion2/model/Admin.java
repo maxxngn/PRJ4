@@ -4,16 +4,16 @@ import jakarta.persistence.*;
 import java.sql.Timestamp;
 
 @Entity
-@Table(name = "products")
-public class Product {
+@Table(name = "admins")
+public class Admin {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     private String name;
-    private Double price;
-    private String description;
-    private Integer qty;
+    private String email;
+    private String password;
+    private String role;
     private Timestamp deletedAt;
 
     // Getters and Setters
@@ -33,28 +33,28 @@ public class Product {
         this.name = name;
     }
 
-    public Double getPrice() {
-        return price;
+    public String getEmail() {
+        return email;
     }
 
-    public void setPrice(Double price) {
-        this.price = price;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
-    public String getDescription() {
-        return description;
+    public String getPassword() {
+        return password;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
-    public Integer getQty() {
-        return qty;
+    public String getRole() {
+        return role;
     }
 
-    public void setQty(Integer qty) {
-        this.qty = qty;
+    public void setRole(String role) {
+        this.role = role;
     }
 
     public Timestamp getDeletedAt() {
