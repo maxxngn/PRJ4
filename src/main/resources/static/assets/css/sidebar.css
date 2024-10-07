@@ -1,0 +1,44 @@
+/* src/main/resources/static/css/sidebar.css */
+
+.sidebar {
+    width: 250px; /* Độ rộng của sidebar */
+    background-color: #2c3e50; /* Màu nền */
+    color: white; /* Màu chữ */
+    height: 100vh; /* Chiều cao sidebar đầy đủ */
+    position: fixed; /* Giữ sidebar cố định bên trái */
+    top: 0; /* Bắt đầu từ đỉnh */
+    left: 0; /* Bắt đầu từ bên trái */
+    padding: 20px; /* Đệm xung quanh */
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5); /* Đổ bóng cho sidebar */
+}
+
+.main-content {
+    margin-left: 300px; /* Hoặc giá trị phù hợp với kích thước sidebar của bạn */
+    padding: 20px; /* Thêm padding nếu cần thiết */
+}
+
+.sidebar nav {
+    margin-top: 20px; /* Đệm trên nav */
+}
+
+.sidebar ul {
+    list-style-type: none; /* Loại bỏ dấu chấm đầu dòng */
+    padding: 0; /* Bỏ padding */
+}
+
+.sidebar li {
+    margin: 15px 0; /* Đệm cho mỗi item */
+}
+
+.sidebar a {
+    text-decoration: none; /* Bỏ gạch chân */
+    color: white; /* Màu chữ */
+    display: block; /* Đảm bảo link chiếm toàn bộ chiều rộng */
+    padding: 10px; /* Đệm cho link */
+    border-radius: 5px; /* Bo góc cho link */
+    transition: background-color 0.3s; /* Hiệu ứng chuyển đổi màu nền */
+}
+
+.sidebar a:hover {
+    background-color: #34495e; /* Màu nền khi hover */
+}

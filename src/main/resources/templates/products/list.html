@@ -1,0 +1,25 @@
+<h1>Product List</h1>
+<a th:href="@{/admin/products/create}">Add New Product</a>
+<table>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+      <th>Price</th>
+      <th>Description</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr th:each="product : ${products}">
+      <td th:text="${product.id}"></td>
+      <td th:text="${product.name}"></td>
+      <td th:text="${product.price}"></td>
+      <td th:text="${product.description}"></td>
+      <td>
+        <a th:href="@{/admin/products/{id}/edit(id=${product.id})}">Edit</a>
+        <a th:href="@{/admin/products/{id}/delete(id=${product.id})}">Delete</a>
+      </td>
+    </tr>
+  </tbody>
+</table>
