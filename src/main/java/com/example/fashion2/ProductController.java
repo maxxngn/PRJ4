@@ -57,4 +57,6 @@ public class ProductController {
         productRepository.deleteById(id);
         return "redirect:/admin/products"; // Quay lại danh sách sản phẩm
     }
+
 }
+
