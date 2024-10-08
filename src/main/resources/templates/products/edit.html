@@ -1,0 +1,13 @@
+<h1>Edit Product</h1>
+<form th:action="@{/admin/products/{id}(id=${product.id})}" th:object="${product}" method="post">
+    <label>Name:</label>
+    <input type="text" th:field="*{name}" required/>
+    <br/>
+    <label>Price:</label>
+    <input type="number" th:field="*{price}" required/>
+    <br/>
+    <label>Description:</label>
+    <textarea th:field="*{description}"></textarea>
+    <br/>
+    <button type="submit">Update</button>
+</form>

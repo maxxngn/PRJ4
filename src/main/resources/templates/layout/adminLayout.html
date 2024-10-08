@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" th:href="@{/static/css/styles.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/sidebar.css}">
+</head>
+<body>
+    <header>
+        <h1>Admin Dashboard</h1>
+    </header>
+    
+    <!-- Use the correct syntax for fragment inclusion -->
+    <div th:insert="~{fragments/sidebar :: sidebar}"></div>  <!-- Sidebar fragment -->
+    
+    <main class="main-content">
+        <!-- Use the correct syntax for content replacement -->
+        <div th:replace="~{${content}}"></div>  <!-- Content goes here -->
+    </main>
+    
+    <footer>
+        <p>© 2024 Your Company</p>
+    </footer>
+</body>
+</html>

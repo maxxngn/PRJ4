@@ -1,0 +1,21 @@
+<h1>Categories</h1>
+<a th:href="@{/admin/categories/new}">Create New Category</a>
+<table>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr th:each="category : ${categories}">
+      <td th:text="${category.id}"></td>
+      <td th:text="${category.name}"></td>
+      <td>
+        <a th:href="@{/admin/categories/{id}/edit(id=${category.id})}">Edit</a>
+        <a th:href="@{/admin/categories/{id}/delete(id=${category.id})}">Delete</a>
+      </td>
+    </tr>
+  </tbody>
+</table>
