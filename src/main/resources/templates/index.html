@@ -659,23 +659,25 @@
                         <h2>By Subscribing To Our Newsletter You Can Get 30% Off</h2>
                         <span>Details to details is what makes Shop X different from the other themes.</span>
                     </div>
-                    <form id="subscribe" action="#" method="get">
+                    <form id="subscribe" th:action="@{/newsletter}" th:object="${subscriber}" method="post">
                         <div class="row">
-                          <div class="col-lg-5">
-                            <fieldset>
-                              <input name="name" type="text" id="name" placeholder="Your Name" required="">
-                            </fieldset>
-                          </div>
-                          <div class="col-lg-5">
-                            <fieldset>
-                              <input name="email" type="text" id="email" pattern="[^ @]*@[^ @]*" placeholder="Your Email Address" required="">
-                            </fieldset>
-                          </div>
-                          <div class="col-lg-2">
-                            <fieldset>
-                              <button type="submit" id="form-submit" class="main-dark-button"><i class="fa fa-paper-plane"></i></button>
-                            </fieldset>
-                          </div>
+                            <div class="col-lg-5">
+                                <fieldset>
+                                    <input name="name" type="text" id="name" placeholder="Your Name" th:field="*{name}" required>
+                                </fieldset>
+                            </div>
+                            <div class="col-lg-5">
+                                <fieldset>
+                                    <input name="email" type="email" id="email" pattern="[^ @]*@[^ @]*" placeholder="Your Email Address" th:field="*{email}" required>
+                                </fieldset>
+                            </div>
+                            <div class="col-lg-2">
+                                <fieldset>
+                                    <button type="submit" id="form-submit" class="main-dark-button">
+                                        <i class="fa fa-paper-plane"></i>
+                                    </button>
+                                </fieldset>
+                            </div>
                         </div>
                     </form>
                 </div>
@@ -692,7 +694,14 @@
                             <ul>
                                 <li>Work Hours:<br><span>07:30 AM - 9:30 PM Daily</span></li>
                                 <li>Email:<br><span>info@company.com</span></li>
-                                <li>Social Media:<br><span><a href="#">Facebook</a>, <a href="#">Instagram</a>, <a href="#">Behance</a>, <a href="#">Linkedin</a></span></li>
+                                <li>Social Media:<br>
+                                    <span>
+                                    <a href="#">Facebook</a>,
+                                    <a href="#">Instagram</a>,
+                                    <a href="#">Behance</a>,
+                                    <a href="#">Linkedin</a>
+                                </span>
+                                </li>
                             </ul>
                         </div>
                     </div>
