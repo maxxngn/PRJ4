@@ -2,6 +2,7 @@ package com.example.fashion2.model;
 
 import jakarta.persistence.*;
 import java.sql.Timestamp;
+import java.util.List;
 
 @Entity
 @Table(name = "products")
@@ -15,6 +16,9 @@ public class Product {
     private String description;
     private Integer qty;
     private Timestamp deletedAt;
+
+    @OneToMany(mappedBy = "product")
+    private List<ProductImage> images;
 
     // Getters and Setters
     public Integer getId() {
@@ -63,5 +67,13 @@ public class Product {
 
     public void setDeletedAt(Timestamp deletedAt) {
         this.deletedAt = deletedAt;
+    }
+
+    public List<ProductImage> getImages() {
+        return images;
+    }
+
+    public void setImages(List<ProductImage> images) {
+        this.images = images;
     }
 }
