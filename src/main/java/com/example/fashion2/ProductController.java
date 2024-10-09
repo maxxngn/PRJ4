@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Controller
-@RequestMapping("/admin/product")
+@RequestMapping("/admin/products")
 public class ProductController {
 
     private static final String UPLOAD_DIR = "src/main/resources/static/uploads/";
