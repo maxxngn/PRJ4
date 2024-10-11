@@ -1,92 +1,54 @@
 package com.example.fashion2.model;
-import jakarta.persistence.*;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.sql.Timestamp;
+import jakarta.persistence.*;
 import java.util.List;
 
 @Entity
-@Table(name = "products")
+@Table(name = "Products")
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private int id;
 
-    @NotBlank(message = "Name is required")
     private String name;
 
-    @NotNull(message = "Price is required")
-    @Min(value = 0, message = "Price must be a positive number")
-    private Double price;
-
+    @Column(columnDefinition = "TEXT")
     private String description;
+    private int price;
+    private int qty;
 
-    @NotNull(message = "Qty is required")
-    @Min(value = 0, message = "Quantity must be a positive number")
-    private Integer qty;
+    @Column(length = 10)
+    private String gender;
+    private boolean status;
 
-    private Timestamp deletedAt;
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<ProductImage> images;
 
-    @Transient  // Đánh dấu rằng trường này không cần lưu vào cơ sở dữ liệu
-    private List<MultipartFile> images;
+    public Product() {}
 
     // Getters and Setters
-    public Integer getId() {
-        return id;
-    }
+    public int getId() { return id; }
+    public void setId(int id) { this.id = id; }
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
 
-    public String getName() {
-        return name;
-    }
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    public int getPrice() { return price; }
+    public void setPrice(int price) { this.price = price; }
 
-    public Double getPrice() {
-        return price;
-    }
+    public int getQty() { return qty; }
+    public void setQty(int qty) { this.qty = qty; }
 
-    public void setPrice(Double price) {
-        this.price = price;
-    }
+    public String getGender() { return gender; }
+    public void setGender(String gender) { this.gender = gender; }
 
-    public String getDescription() {
-        return description;
-    }
+    public boolean isStatus() { return status; }
+    public void setStatus(boolean status) { this.status = status; }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Integer getQty() {
-        return qty;
-    }
-
-    public void setQty(Integer qty) {
-        this.qty = qty;
-    }
-
-    public Timestamp getDeletedAt() {
-        return deletedAt;
-    }
-
-    public void setDeletedAt(Timestamp deletedAt) {
-        this.deletedAt = deletedAt;
-    }
-
-    public List<MultipartFile> getImages() {
-        return images;
-    }
-
-    public void setImages(List<MultipartFile> images) {
-        this.images = images;
+    public String getFirstImageUrl() {
+        return (images != null && !images.isEmpty()) ? images.get(0).getImageUrl() : null;
     }
 }

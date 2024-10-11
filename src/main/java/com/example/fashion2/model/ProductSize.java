@@ -3,8 +3,8 @@ package com.example.fashion2.model;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "ProductImages")
-public class ProductImage {
+@Table(name = "ProductSizes")
+public class ProductSize {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -13,9 +13,10 @@ public class ProductImage {
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
-    private String imageUrl;
+    @Column(length = 10) // Xác định độ dài tối đa của size là 10 ký tự
+    private String size; // Thay đổi từ int thành String
 
-    public ProductImage() {}
+    public ProductSize() {}
 
     // Getters and Setters
     public int getId() { return id; }
@@ -24,7 +25,6 @@ public class ProductImage {
     public Product getProduct() { return product; }
     public void setProduct(Product product) { this.product = product; }
 
-    public String getImageUrl() { return imageUrl; }
-    public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
+    public String getSize() { return size; }
+    public void setSize(String size) { this.size = size; } // Cập nhật kiểu dữ liệu
 }
-
