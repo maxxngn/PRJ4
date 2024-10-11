@@ -17,7 +17,7 @@ public class SubscriberService {
 
     public Subscriber subscribe(Subscriber subscriber) {
         Subscriber savedSubscriber = subscriberRepository.save(subscriber);
-        emailService.sendSubscriptionEmail(savedSubscriber.getEmail(), savedSubscriber.getName());
+        emailService.sendConfirmationEmail(savedSubscriber.getEmail(), savedSubscriber.getName());
         return savedSubscriber;
     }
 }

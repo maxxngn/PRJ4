@@ -4,8 +4,10 @@
   <thead>
     <tr>
       <th>ID</th>
+      <th>Image</th> <!-- Thêm cột Image -->
       <th>Name</th>
       <th>Price</th>
+      <th>Qty</th>
       <th>Description</th>
       <th>Actions</th>
     </tr>
@@ -13,8 +15,15 @@
   <tbody>
     <tr th:each="product : ${products}">
       <td th:text="${product.id}"></td>
+      <td>
+        <!-- Kiểm tra nếu product có ảnh, hiển thị ảnh đầu tiên -->
+        <img th:if="${product.images.size() > 0}" th:src="@{/uploads/{image}(image=${product.images[0].image})}" alt="Product Image" width="100"/>
+        <!-- Nếu không có ảnh, hiển thị một placeholder -->
+        <span th:if="${product.images.size() == 0}">No Image</span>
+      </td>
       <td th:text="${product.name}"></td>
       <td th:text="${product.price}"></td>
+      <td th:text="${product.qty}"></td>
       <td th:text="${product.description}"></td>
       <td>
         <a th:href="@{/admin/products/{id}/edit(id=${product.id})}">Edit</a>

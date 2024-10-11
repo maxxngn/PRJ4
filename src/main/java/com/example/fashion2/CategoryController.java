@@ -27,8 +27,9 @@ public class CategoryController {
 
     @GetMapping("/new")
     public String showCreateForm(Model model) {
+        model.addAttribute("content", "categories/create"); // Trỏ tới fragment tạo danh mục mới
         model.addAttribute("category", new Category());
-        return "categories/create"; // Trỏ tới trang tạo danh mục mới
+        return "layout/adminLayout"; 
     }
 
     @PostMapping

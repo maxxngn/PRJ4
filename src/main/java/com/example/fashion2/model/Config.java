@@ -9,7 +9,9 @@ public class Config {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @Column(name = "`key`") // Используйте обратные кавычки
     private String key;
+
     private String value;
 
     // Getters and Setters

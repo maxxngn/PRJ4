@@ -1,9 +1,6 @@
 package com.example.fashion2.service;
 
-
-
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -14,11 +11,11 @@ public class EmailService {
     @Autowired
     private JavaMailSender mailSender;
 
-    public void sendSubscriptionEmail(String toEmail, String name) {
+    public void sendConfirmationEmail(String to, String name) {
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo(toEmail);
-        message.setSubject("Подписка на рассылку");
-        message.setText("Здравствуйте, " + name + "!\n\nСпасибо за подписку на нашу рассылку. Вы получите 30% скидку на следующую покупку.");
+        message.setTo(to);
+        message.setSubject("Subscription Confirmation");
+        message.setText(String.format("Hello, %s! You have successfully subscribed to the newsletter with a discount! Please check your email for confirmation.", name));
         mailSender.send(message);
     }
 }
