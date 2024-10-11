@@ -1,67 +1,35 @@
 package com.example.fashion2.model;
 
 import jakarta.persistence.*;
-import java.sql.Timestamp;
 
 @Entity
-@Table(name = "vouchers")
+@Table(name = "Vouchers")
 public class Voucher {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private int id;
 
     private String code;
-    private Double ratio;
+    private int discount;
+    private int qty;
     private String description;
-    private Integer qty;
-    private Timestamp deletedAt;
+
+    public Voucher() {}
 
     // Getters and Setters
-    public Integer getId() {
-        return id;
-    }
+    public int getId() { return id; }
+    public void setId(int id) { this.id = id; }
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+    public String getCode() { return code; }
+    public void setCode(String code) { this.code = code; }
 
-    public String getCode() {
-        return code;
-    }
+    public int getDiscount() { return discount; }
+    public void setDiscount(int discount) { this.discount = discount; }
 
-    public void setCode(String code) {
-        this.code = code;
-    }
+    public int getQty() { return qty; }
+    public void setQty(int qty) { this.qty = qty; }
 
-    public Double getRatio() {
-        return ratio;
-    }
-
-    public void setRatio(Double ratio) {
-        this.ratio = ratio;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Integer getQty() {
-        return qty;
-    }
-
-    public void setQty(Integer qty) {
-        this.qty = qty;
-    }
-
-    public Timestamp getDeletedAt() {
-        return deletedAt;
-    }
-
-    public void setDeletedAt(Timestamp deletedAt) {
-        this.deletedAt = deletedAt;
-    }
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
 }
+

@@ -1,67 +1,54 @@
 package com.example.fashion2.model;
 
 import jakarta.persistence.*;
-import java.sql.Timestamp;
+import java.util.List;
 
 @Entity
-@Table(name = "products")
+@Table(name = "Products")
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private int id;
 
     private String name;
-    private Double price;
+
+    @Column(columnDefinition = "TEXT")
     private String description;
-    private Integer qty;
-    private Timestamp deletedAt;
+    private int price;
+    private int qty;
+
+    @Column(length = 10)
+    private String gender;
+    private boolean status;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<ProductImage> images;
+
+    public Product() {}
 
     // Getters and Setters
-    public Integer getId() {
-        return id;
-    }
+    public int getId() { return id; }
+    public void setId(int id) { this.id = id; }
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
 
-    public String getName() {
-        return name;
-    }
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    public int getPrice() { return price; }
+    public void setPrice(int price) { this.price = price; }
 
-    public Double getPrice() {
-        return price;
-    }
+    public int getQty() { return qty; }
+    public void setQty(int qty) { this.qty = qty; }
 
-    public void setPrice(Double price) {
-        this.price = price;
-    }
+    public String getGender() { return gender; }
+    public void setGender(String gender) { this.gender = gender; }
 
-    public String getDescription() {
-        return description;
-    }
+    public boolean isStatus() { return status; }
+    public void setStatus(boolean status) { this.status = status; }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Integer getQty() {
-        return qty;
-    }
-
-    public void setQty(Integer qty) {
-        this.qty = qty;
-    }
-
-    public Timestamp getDeletedAt() {
-        return deletedAt;
-    }
-
-    public void setDeletedAt(Timestamp deletedAt) {
-        this.deletedAt = deletedAt;
+    public String getFirstImageUrl() {
+        return (images != null && !images.isEmpty()) ? images.get(0).getImageUrl() : null;
     }
 }

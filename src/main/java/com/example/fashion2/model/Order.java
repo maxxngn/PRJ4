@@ -1,64 +1,75 @@
 package com.example.fashion2.model;
 
 import jakarta.persistence.*;
-import java.sql.Timestamp;
 
 @Entity
-@Table(name = "orders")
+@Table(name = "Orders")
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private int id;
 
     @ManyToOne
-    @JoinColumn(name = "address_id", nullable = false)
-    private Address address;
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
+    @ManyToOne
+    @JoinColumn(name = "product_id", nullable = false)
+    private Product product;
 
     @ManyToOne
     @JoinColumn(name = "voucher_id")
     private Voucher voucher;
 
-    private Double price;
-    private String status;
+    private int size;
+    private String color;
+    private int qty;
+    private int price;
+
+    @Enumerated(EnumType.STRING)
+    private Payment payment;
+
+    private String phone;
+    private String address;
+
+    public Order() {}
 
     // Getters and Setters
-    public Integer getId() {
-        return id;
-    }
+    public int getId() { return id; }
+    public void setId(int id) { this.id = id; }
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+    public User getUser() { return user; }
+    public void setUser(User user) { this.user = user; }
 
-    public Address getAddress() {
-        return address;
-    }
+    public Product getProduct() { return product; }
+    public void setProduct(Product product) { this.product = product; }
 
-    public void setAddress(Address address) {
-        this.address = address;
-    }
+    public Voucher getVoucher() { return voucher; }
+    public void setVoucher(Voucher voucher) { this.voucher = voucher; }
 
-    public Voucher getVoucher() {
-        return voucher;
-    }
+    public int getSize() { return size; }
+    public void setSize(int size) { this.size = size; }
 
-    public void setVoucher(Voucher voucher) {
-        this.voucher = voucher;
-    }
+    public String getColor() { return color; }
+    public void setColor(String color) { this.color = color; }
 
-    public Double getPrice() {
-        return price;
-    }
+    public int getQty() { return qty; }
+    public void setQty(int qty) { this.qty = qty; }
 
-    public void setPrice(Double price) {
-        this.price = price;
-    }
+    public int getPrice() { return price; }
+    public void setPrice(int price) { this.price = price; }
 
-    public String getStatus() {
-        return status;
-    }
+    public Payment getPayment() { return payment; }
+    public void setPayment(Payment payment) { this.payment = payment; }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public String getPhone() { return phone; }
+    public void setPhone(String phone) { this.phone = phone; }
+
+    public String getAddress() { return address; }
+    public void setAddress(String address) { this.address = address; }
+
+    public enum Payment {
+        CASH,
+        PAY
     }
 }

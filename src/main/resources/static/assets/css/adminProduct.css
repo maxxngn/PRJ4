@@ -1,32 +1,25 @@
-.gradient-custom {
-    /* fallback for old browsers */
-    background: #f2f2f2;
-
-    /* Chrome 10-25, Safari 5.1-6 */
-
-    background: -webkit-linear-gradient(to right, rgba(106, 17, 203, 1), rgba(37, 117, 252, 1));
-    background: linear-gradient(to right, #2a2a2a, #f8f9fa);
-    margin-top: 80px;
-    margin-bottom: 20px;
-}
-
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Arial', sans-serif; /* Thay đổi font chữ nếu cần */
     margin: 0;
     padding: 0;
+    background-color: #f4f4f4;
 }
 
 .container {
-    display: flex;
+    display: flex; /* Sử dụng flexbox để chia sẻ không gian giữa sidebar và nội dung chính */
+    max-width: 1200px;
+    margin: 20px auto;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    background-color: #ffffff; /* Màu nền cho container */
+    border-radius: 8px;
 }
 
-/* Sidebar */
 .sidebar {
-    width: 250px;
-    background-color: #333;
-    color: white;
+    width: 250px; /* Chiều rộng cố định cho sidebar */
+    background-color: #2c3e50; /* Màu nền cho sidebar */
+    color: #ffffff; /* Màu chữ cho sidebar */
     padding: 20px;
-    height: 100vh;
+    border-radius: 8px 0 0 8px; /* Bo tròn góc trái cho sidebar */
 }
 
 .sidebar h2 {
@@ -34,53 +27,31 @@ body {
 }
 
 .sidebar ul {
-    list-style-type: none;
+    list-style-type: none; /* Bỏ dấu đầu dòng */
     padding: 0;
 }
 
 .sidebar ul li {
-    margin: 15px 0;
+    margin: 15px 0; /* Khoảng cách giữa các item */
 }
 
 .sidebar ul li a {
-    color: white;
-    text-decoration: none;
+    color: #ffffff; /* Màu chữ cho các liên kết */
+    text-decoration: none; /* Bỏ gạch chân cho liên kết */
+    transition: color 0.3s;
 }
 
 .sidebar ul li a:hover {
-    text-decoration: underline;
+    color: #18bc9c; /* Màu chữ khi hover */
 }
 
-/* Main Content */
 .main-content {
-    flex: 1;
+    flex: 1; /* Chiếm phần còn lại không gian của container */
     padding: 20px;
 }
 
 h1 {
-    color: #333;
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-}
-
-table,
-th,
-td {
-    border: 1px solid #ccc;
-}
-
-th,
-td {
-    padding: 10px;
-    text-align: left;
-}
-
-th {
-    background-color: #f2f2f2;
+    margin-bottom: 20px; /* Khoảng cách dưới tiêu đề */
 }
 
 form {
@@ -120,7 +91,6 @@ button[type="button"] {
     border-radius: 4px;
     cursor: pointer; /* Hiển thị con trỏ tay khi hover */
     transition: background-color 0.3s;
-    width: max-content;
 }
 
 button[type="submit"]:hover,
@@ -130,14 +100,4 @@ button[type="button"]:hover {
 
 #color-container {
     margin-top: 10px; /* Khoảng cách trên cho container màu */
-}
-
-.description-cell {
-    display: -webkit-box; /* Thiết lập chế độ hiển thị thành box */
-    -webkit-box-orient: vertical; /* Định hướng chiều dọc cho box */
-    -webkit-line-clamp: 3; /* Giới hạn số dòng hiển thị */
-    overflow: hidden; /* Ẩn phần văn bản vượt quá */
-    text-overflow: ellipsis; /* Thêm dấu ... nếu có văn bản bị cắt */
-    max-height: 4.5em; /* Độ cao tối đa cho 3 dòng (3 * chiều cao dòng) */
-    line-height: 1.5em; /* Chiều cao dòng */
 }
