@@ -1,20 +1,12 @@
 package com.example.fashion2.service;
 
+import com.example.fashion2.dto.CreateProductRequest;
+import com.example.fashion2.dto.UpdateProductRequest;
+import com.example.fashion2.model.*;
+import com.example.fashion2.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import com.example.fashion2.model.Product;
-import com.example.fashion2.model.ProductColor;
-import com.example.fashion2.model.ProductImage;
-import com.example.fashion2.model.ProductSize;
-import com.example.fashion2.repository.ProductColorRepository;
-import com.example.fashion2.repository.ProductImageRepository;
-import com.example.fashion2.repository.ProductRepository;
-import com.example.fashion2.repository.ProductSizeRepository;
-
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -25,81 +17,110 @@ public class ProductService {
     private ProductRepository productRepository;
 
     @Autowired
-    private ProductSizeRepository productSizeRepository;
+    private ProductColorRepository colorRepository;
 
     @Autowired
-    private ProductColorRepository productColorRepository;
+    private ProductSizeRepository sizeRepository;
 
     @Autowired
-    private ProductImageRepository productImageRepository;
+    private ProductImageRepository imageRepository;
+
+    @Transactional
+    public Product createProduct(CreateProductRequest request) {
+        // Tạo sản phẩm mới
+        Product product = new Product();
+        product.setName(request.getName());
+        product.setDescription(request.getDescription());
+        product.setPrice(request.getPrice());
+        product.setQty(request.getQty());
+        product.setGender(request.getGender());
+        product.setStatus(request.isStatus());
+
+        // Lưu sản phẩm
+        product = productRepository.save(product);
+
+        // Thêm màu sắc, kích thước và hình ảnh
+        saveColorsSizesImages(request, product);
+
+        return product;
+    }
 
     public List<Product> getAllProducts() {
         return productRepository.findAll();
     }
 
-    public Page<Product> getAllProducts(Pageable pageable) {
-        return productRepository.findAll(pageable);
-    }
-
-    public Product getProductById(Integer id) {
+    public Product getProductById(int id) {
         return productRepository.findById(id).orElse(null);
     }
 
-    public List<Product> getProductsByGender(String gender) {
-        return productRepository.findByGender(gender);
+    @Transactional
+    public Product updateProduct(int id, UpdateProductRequest request) {
+        Product product = productRepository.findById(id).orElseThrow(() -> new RuntimeException("Product not found"));
+
+        // Cập nhật thông tin sản phẩm
+        product.setName(request.getName());
+        product.setDescription(request.getDescription());
+        product.setPrice(request.getPrice());
+        product.setQty(request.getQty());
+        product.setGender(request.getGender());
+        product.setStatus(request.isStatus());
+
+        // Xóa các thông tin cũ
+        colorRepository.deleteByProductId(id);
+        sizeRepository.deleteByProductId(id);
+        imageRepository.deleteByProductId(id);
+
+        // Thêm lại màu sắc, kích thước và hình ảnh mới
+        saveColorsSizesImages(request, product);
+
+        return productRepository.save(product);
     }
 
     @Transactional
-    public Product createProduct(Product product, List<String> sizes, List<String> colors, List<String> images) {
-        Product savedProduct = productRepository.save(product);
-
-        // Lưu kích cỡ
-        if (sizes != null) {
-            for (String size : sizes) {
-                ProductSize productSize = new ProductSize();
-                productSize.setProduct(savedProduct);
-                productSize.setSize(size); // Set size as String
-                productSizeRepository.save(productSize);
-            }
-        }
-
-        // Lưu màu sắc
-        if (colors != null) {
-            for (String color : colors) {
-                ProductColor productColor = new ProductColor();
-                productColor.setProduct(savedProduct);
-                productColor.setColor(color);
-                productColorRepository.save(productColor);
-            }
-        }
-
-        // Lưu hình ảnh
-        if (images != null) {
-            for (String imageUrl : images) {
-                ProductImage productImage = new ProductImage();
-                productImage.setProduct(savedProduct);
-                productImage.setImageUrl(imageUrl);
-                productImageRepository.save(productImage);
-            }
-        }
-
-        return savedProduct;
+    public void deleteProduct(int id) {
+        Product product = productRepository.findById(id).orElseThrow(() -> new RuntimeException("Product not found"));
+        productRepository.delete(product);
     }
 
-    public Product updateProduct(Integer id, Product productDetails) {
-        Product product = getProductById(id);
-        if (product != null) {
-            product.setName(productDetails.getName());
-            product.setDescription(productDetails.getDescription());
-            product.setPrice(productDetails.getPrice());
-            product.setQty(productDetails.getQty());
-            product.setStatus(productDetails.isStatus());
-            return productRepository.save(product);
+    private void saveColorsSizesImages(Object request, Product product) {
+        List<String> colors;
+        List<String> sizes;
+        List<String> images;
+    
+        if (request instanceof CreateProductRequest) {
+            colors = ((CreateProductRequest) request).getColors();
+            sizes = ((CreateProductRequest) request).getSizes();
+            images = ((CreateProductRequest) request).getImages();
+        } else if (request instanceof UpdateProductRequest) {
+            colors = ((UpdateProductRequest) request).getColors();
+            sizes = ((UpdateProductRequest) request).getSizes();
+            images = ((UpdateProductRequest) request).getImages();
+        } else {
+            throw new IllegalArgumentException("Invalid request type");
         }
-        return null;
-    }
-
-    public void deleteProduct(Integer id) {
-        productRepository.deleteById(id);
-    }
+    
+        // Save colors
+        for (String colorName : colors) {
+            ProductColor color = new ProductColor();
+            color.setProduct(product);
+            color.setColor(colorName);
+            colorRepository.save(color);
+        }
+    
+        // Save sizes
+        for (String sizeName : sizes) {
+            ProductSize size = new ProductSize();
+            size.setProduct(product);
+            size.setSize(sizeName);
+            sizeRepository.save(size);
+        }
+    
+        // Save images
+        for (String imageUrl : images) {
+            ProductImage image = new ProductImage();
+            image.setProduct(product);
+            image.setImageUrl(imageUrl);
+            imageRepository.save(image);
+        }
+    }    
 }
