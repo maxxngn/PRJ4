@@ -1,27 +1,47 @@
 package com.example.fashion2;
-
-import com.example.fashion2.service.ProductService;
+import org.springframework.ui.Model;
 import com.example.fashion2.model.Product;
+import com.example.fashion2.model.Subscriber;
+import com.example.fashion2.service.ProductService;
+import com.example.fashion2.service.SubscriberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.List;
 
 @Controller
-@RequestMapping
 public class IndexController {
 
     @Autowired
     private ProductService productService;
 
-    @GetMapping("")
-    public String Index(Model model) {
+    @Autowired
+    private SubscriberService subscriberService;
+
+    @GetMapping("/")
+    public String showHomePage(Model model) {
+        // Получаем все продукты и добавляем их в модель
         List<Product> products = productService.getAllProducts();
         model.addAttribute("products", products);
 
-        return "user/home/index";
+        // Добавляем объект для подписки
+        model.addAttribute("subscriber", new Subscriber());
+
+        return "index"; // Имя вашего шаблона
+    }
+
+    @PostMapping("/newsletter")
+    public String subscribe(@ModelAttribute("subscriber") Subscriber subscriber, Model model) {
+        // Сохраняем подписчика
+        subscriberService.subscribe(subscriber);
+
+        // Добавляем сообщение в модель
+        model.addAttribute("message", "Вы успешно подписались на рассылку с 30% скидкой! Проверьте ваш email для подтверждения.");
+
+        // Возвращаемся к главной странице
+        return "index"; // Замените на имя вашего шаблона, если оно отличается
     }
 }

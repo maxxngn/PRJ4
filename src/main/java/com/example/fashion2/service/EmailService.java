@@ -17,8 +17,8 @@ public class EmailService {
     public void sendSubscriptionEmail(String toEmail, String name) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(toEmail);
-        message.setSubject("Подписка на рассылку");
-        message.setText("Здравствуйте, " + name + "!\n\nСпасибо за подписку на нашу рассылку. Вы получите 30% скидку на следующую покупку.");
+        message.setSubject("Subscribe Confirm");
+        message.setText("Hello, " + name + "!\n\nThank you for subscribing to our newsletter. You will receive a 30% discount on your next purchase.");
         mailSender.send(message);
     }
 }
