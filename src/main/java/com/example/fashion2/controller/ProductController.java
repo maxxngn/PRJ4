@@ -1,7 +1,5 @@
 package com.example.fashion2.controller;
 
-import com.example.fashion2.dto.CreateProductRequest;
-import com.example.fashion2.dto.UpdateProductRequest;
 import com.example.fashion2.model.Product;
 import com.example.fashion2.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,13 +19,9 @@ public class ProductController {
 
     // 1. Create Product
     @PostMapping("/create")
-    public ResponseEntity<?> createProduct(@RequestBody CreateProductRequest request) {
-        try {
-            Product product = productService.createProduct(request);
-            return ResponseEntity.ok(product);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
+    public ResponseEntity<Product> createProduct(@RequestBody Product product) {
+        Product createdProduct = productService.createProduct(product);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdProduct);
     }
 
     // 2. Get All Products
@@ -48,17 +42,6 @@ public class ProductController {
         }
     }
 
-    // 4. Update Product
-    @PutMapping("/update/{id}")
-    public ResponseEntity<?> updateProduct(@PathVariable int id, @RequestBody UpdateProductRequest request) {
-        try {
-            Product product = productService.updateProduct(id, request);
-            return ResponseEntity.ok(product);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
-    }
-
     // 5. Delete Product
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> deleteProduct(@PathVariable int id) {
@@ -68,5 +51,29 @@ public class ProductController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
+    }
+
+    @GetMapping("/gender/man")
+    public ResponseEntity<List<Product>> getProductsForMen() {
+        List<Product> products = productService.getProductsForMen();
+        return ResponseEntity.ok(products);
+    }
+
+    @GetMapping("/gender/women")
+    public ResponseEntity<List<Product>> getProductsForWomen() {
+        List<Product> products = productService.getProductsForWomen();
+        return ResponseEntity.ok(products);
+    }
+
+    @GetMapping("/gender/kid")
+    public ResponseEntity<List<Product>> getProductsForKids() {
+        List<Product> products = productService.getProductsForKids();
+        return ResponseEntity.ok(products);
+    }
+
+    @GetMapping("/gender/unisex")
+    public ResponseEntity<List<Product>> getProductsForUnisex() {
+        List<Product> products = productService.getProductsForUnisex();
+        return ResponseEntity.ok(products);
     }
 }

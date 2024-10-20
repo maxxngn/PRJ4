@@ -21,8 +21,17 @@ public class Product {
     private String gender;
     private boolean status;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<ProductImage> images;
+    private String imageUrl;
+
+    @ElementCollection
+    @CollectionTable(name = "product_sizes", joinColumns = @JoinColumn(name = "product_id"))
+    @Column(name = "size")
+    private List<String> sizes; // Thuộc tính size
+
+    @ElementCollection
+    @CollectionTable(name = "product_colors", joinColumns = @JoinColumn(name = "product_id"))
+    @Column(name = "color")
+    private List<String> colors; // Thuộc tính color
 
     public Product() {}
 
@@ -48,7 +57,12 @@ public class Product {
     public boolean isStatus() { return status; }
     public void setStatus(boolean status) { this.status = status; }
 
-    public String getFirstImageUrl() {
-        return (images != null && !images.isEmpty()) ? images.get(0).getImageUrl() : null;
-    }
+    public String getImageUrl() { return imageUrl; }
+    public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
+
+    public List<String> getSizes() { return sizes; }
+    public void setSizes(List<String> sizes) { this.sizes = sizes; }
+
+    public List<String> getColors() { return colors; }
+    public void setColors(List<String> colors) { this.colors = colors; }
 }

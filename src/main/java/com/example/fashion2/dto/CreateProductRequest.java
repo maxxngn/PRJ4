@@ -1,20 +1,33 @@
 package com.example.fashion2.dto;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import java.util.List;
 
 public class CreateProductRequest {
+    @NotBlank(message = "Product name is required")
     private String name;
+
+    @NotBlank(message = "Description is required")
     private String description;
+
+    @NotNull(message = "Price is required")
     private int price;
+
+    @NotNull(message = "Quantity is required")
     private int qty;
+
     private String gender;
+
     private boolean status;
 
-    private List<String> colors;
-    private List<String> sizes;
-    private List<String> images;
+    private String imageUrl;
+
+    private List<String> colors; // Thêm danh sách màu sắc
+    private List<String> sizes; // Thêm danh sách kích thước
 
     // Getters and Setters
+    // ...
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
 
@@ -33,12 +46,12 @@ public class CreateProductRequest {
     public boolean isStatus() { return status; }
     public void setStatus(boolean status) { this.status = status; }
 
+    public String getImageUrl() { return imageUrl; }
+    public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
+
     public List<String> getColors() { return colors; }
     public void setColors(List<String> colors) { this.colors = colors; }
 
     public List<String> getSizes() { return sizes; }
     public void setSizes(List<String> sizes) { this.sizes = sizes; }
-
-    public List<String> getImages() { return images; }
-    public void setImages(List<String> images) { this.images = images; }
 }
