@@ -37,11 +37,11 @@ public class AuthController {
         Optional<User> user = userService.login(username, password);
         if (user.isPresent()) {
             User loggedInUser = user.get();
-<<<<<<< HEAD
+
             loggedInUser.setPassword(null);  //
-=======
+
             loggedInUser.setPassword(null);
->>>>>>> ec0d1e2f780980105112e885be5c157bd4be78e1
+
             return ResponseEntity.ok(loggedInUser);
         }
         return ResponseEntity.status(401).body("Invalid credentials");
