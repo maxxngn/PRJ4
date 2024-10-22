@@ -21,7 +21,7 @@ public class Order {
     @JoinColumn(name = "voucher_id")
     private Voucher voucher;
 
-    private int size;
+    private String size;
     private String color;
     private int qty;
     private int price;
@@ -47,8 +47,8 @@ public class Order {
     public Voucher getVoucher() { return voucher; }
     public void setVoucher(Voucher voucher) { this.voucher = voucher; }
 
-    public int getSize() { return size; }
-    public void setSize(int size) { this.size = size; }
+    public String getSize() { return size; }
+    public void setSize(String size) { this.size = size; }
 
     public String getColor() { return color; }
     public void setColor(String color) { this.color = color; }
