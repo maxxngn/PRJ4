@@ -22,4 +22,27 @@ public class OrderService {
     public List<Order> getAllOrders() {
         return orderRepository.findAll();
     }
+
+    // Get an order by id
+    public Order getOrderById(int id) {
+        return orderRepository.findById(id).orElse(null);
+    }
+
+    public Order updateOrderStatus(int id) {
+        Order order = orderRepository.findById(id).orElse(null);
+        if (order != null && order.getStatus() < 4) {  // Giả sử status tối đa là 4
+            order.setStatus(order.getStatus() + 1);
+            return orderRepository.save(order);
+        }
+        return null;
+    }
+
+    public Order cancelOrder(int id) {
+        Order order = orderRepository.findById(id).orElse(null);
+        if (order != null && order.getStatus() == 0) {
+            order.setStatus(5);
+            return orderRepository.save(order);
+        }
+        return null;
+    }
 }

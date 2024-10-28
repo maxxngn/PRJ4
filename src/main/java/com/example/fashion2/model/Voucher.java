@@ -14,7 +14,12 @@ public class Voucher {
     private int qty;
     private String description;
 
-    public Voucher() {}
+    // New field
+    private boolean status; // true for active, false for inactive
+
+    public Voucher() {
+        this.status = true; // Set default status to true (active)
+    }
 
     // Getters and Setters
     public int getId() { return id; }
@@ -31,5 +36,7 @@ public class Voucher {
 
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
-}
 
+    public boolean isStatus() { return status; }
+    public void setStatus(boolean status) { this.status = status; }
+}
