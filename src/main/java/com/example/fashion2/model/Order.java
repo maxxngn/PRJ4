@@ -25,12 +25,17 @@ public class Order {
     private String color;
     private int qty;
     private int price;
+    private int status;
 
     @Enumerated(EnumType.STRING)
     private Payment payment;
 
     private String phone;
     private String address;
+
+    @ManyToOne
+    @JoinColumn(name = "ward_id", nullable = false) // Thêm quan hệ tới Ward
+    private Ward ward;
 
     public Order() {}
 
@@ -59,6 +64,9 @@ public class Order {
     public int getPrice() { return price; }
     public void setPrice(int price) { this.price = price; }
 
+    public int getStatus() { return status; }
+    public void setStatus(int status) { this.status = status; }
+
     public Payment getPayment() { return payment; }
     public void setPayment(Payment payment) { this.payment = payment; }
 
@@ -67,6 +75,9 @@ public class Order {
 
     public String getAddress() { return address; }
     public void setAddress(String address) { this.address = address; }
+
+    public Ward getWard() { return ward; }
+    public void setWard(Ward ward) { this.ward = ward; }
 
     public enum Payment {
         CASH,

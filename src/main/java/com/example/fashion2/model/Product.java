@@ -21,17 +21,20 @@ public class Product {
     private String gender;
     private boolean status;
 
-    private String imageUrl;
+    @ElementCollection
+    @CollectionTable(name = "product_images", joinColumns = @JoinColumn(name = "product_id"))
+    @Column(name = "image_url")
+    private List<String> imageUrls; // Change here to a list of image URLs
 
     @ElementCollection
     @CollectionTable(name = "product_sizes", joinColumns = @JoinColumn(name = "product_id"))
     @Column(name = "size")
-    private List<String> sizes; // Thuộc tính size
+    private List<String> sizes; // Size attribute
 
     @ElementCollection
     @CollectionTable(name = "product_colors", joinColumns = @JoinColumn(name = "product_id"))
     @Column(name = "color")
-    private List<String> colors; // Thuộc tính color
+    private List<String> colors; // Color attribute
 
     public Product() {}
 
@@ -57,8 +60,8 @@ public class Product {
     public boolean isStatus() { return status; }
     public void setStatus(boolean status) { this.status = status; }
 
-    public String getImageUrl() { return imageUrl; }
-    public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
+    public List<String> getImageUrls() { return imageUrls; } // Update getter
+    public void setImageUrls(List<String> imageUrls) { this.imageUrls = imageUrls; } // Update setter
 
     public List<String> getSizes() { return sizes; }
     public void setSizes(List<String> sizes) { this.sizes = sizes; }

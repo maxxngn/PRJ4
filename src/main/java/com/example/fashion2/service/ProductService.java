@@ -53,4 +53,23 @@ public class ProductService {
         Product product = productRepository.findById(id).orElseThrow(() -> new RuntimeException("Product not found"));
         productRepository.delete(product);
     }
+
+    
+    @Transactional
+    public Product updateProduct(int id, Product updatedProduct) {
+        Product existingProduct = productRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Product not found"));
+
+        existingProduct.setName(updatedProduct.getName());
+        existingProduct.setDescription(updatedProduct.getDescription());
+        existingProduct.setPrice(updatedProduct.getPrice());
+        existingProduct.setQty(updatedProduct.getQty());
+        existingProduct.setGender(updatedProduct.getGender());
+        existingProduct.setStatus(updatedProduct.isStatus());
+        existingProduct.setColors(updatedProduct.getColors());
+        existingProduct.setSizes(updatedProduct.getSizes());
+        existingProduct.setImageUrls(updatedProduct.getImageUrls());
+        
+        return productRepository.save(existingProduct);
+    }
 }
