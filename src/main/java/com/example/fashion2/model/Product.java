@@ -15,28 +15,22 @@ public class Product {
     @Column(columnDefinition = "TEXT")
     private String description;
     private int price;
-    private int qty;
 
     @Column(length = 10)
     private String gender;
+
+    @Column(columnDefinition = "BOOLEAN DEFAULT TRUE")
     private boolean status;
 
     @ElementCollection
     @CollectionTable(name = "product_images", joinColumns = @JoinColumn(name = "product_id"))
     @Column(name = "image_url")
-    private List<String> imageUrls; // Change here to a list of image URLs
+    private List<String> imageUrls; // List of image URLs
 
-    @ElementCollection
-    @CollectionTable(name = "product_sizes", joinColumns = @JoinColumn(name = "product_id"))
-    @Column(name = "size")
-    private List<String> sizes; // Size attribute
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProductVariant> variants;
 
-    @ElementCollection
-    @CollectionTable(name = "product_colors", joinColumns = @JoinColumn(name = "product_id"))
-    @Column(name = "color")
-    private List<String> colors; // Color attribute
-
-    public Product() {}
+    public Product() {} 
 
     // Getters and Setters
     public int getId() { return id; }
@@ -51,21 +45,15 @@ public class Product {
     public int getPrice() { return price; }
     public void setPrice(int price) { this.price = price; }
 
-    public int getQty() { return qty; }
-    public void setQty(int qty) { this.qty = qty; }
-
     public String getGender() { return gender; }
     public void setGender(String gender) { this.gender = gender; }
 
     public boolean isStatus() { return status; }
     public void setStatus(boolean status) { this.status = status; }
 
-    public List<String> getImageUrls() { return imageUrls; } // Update getter
-    public void setImageUrls(List<String> imageUrls) { this.imageUrls = imageUrls; } // Update setter
+    public List<String> getImageUrls() { return imageUrls; }
+    public void setImageUrls(List<String> imageUrls) { this.imageUrls = imageUrls; }
 
-    public List<String> getSizes() { return sizes; }
-    public void setSizes(List<String> sizes) { this.sizes = sizes; }
-
-    public List<String> getColors() { return colors; }
-    public void setColors(List<String> colors) { this.colors = colors; }
+    public List<ProductVariant> getVariants() { return variants; }
+    public void setVariants(List<ProductVariant> variants) { this.variants = variants; }
 }

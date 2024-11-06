@@ -1,5 +1,8 @@
 package com.example.fashion2.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -18,6 +21,9 @@ public class User {
     private Role role;
 
     private boolean status;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Address> addresses = new ArrayList<>(); // Initialize the list
 
     public User() {}
 
@@ -42,6 +48,9 @@ public class User {
 
     public boolean isStatus() { return status; }
     public void setStatus(boolean status) { this.status = status; }
+
+    public List<Address> getAddresses() { return addresses; }
+    public void setAddresses(List<Address> addresses) { this.addresses = addresses; }
 
     public enum Role {
         USER,

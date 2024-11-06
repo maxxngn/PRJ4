@@ -30,6 +30,10 @@ public class VoucherService {
         return voucherRepository.save(voucher);
     }
 
+    public Optional<Voucher> getVoucherByCode(String code) {
+        return voucherRepository.findByCode(code); // Assuming you have this method in your repository
+    }
+
     public Voucher updateVoucher(int id, Voucher voucherDetails) {
         Voucher voucher = voucherRepository.findById(id).orElseThrow();
         voucher.setCode(voucherDetails.getCode());
