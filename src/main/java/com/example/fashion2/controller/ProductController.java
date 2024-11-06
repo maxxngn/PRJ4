@@ -21,7 +21,7 @@ public class ProductController {
     @PostMapping("/create")
     public ResponseEntity<Product> createProduct(@RequestBody Product product) {
         Product createdProduct = productService.createProduct(product);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdProduct);
+        return new ResponseEntity<>(createdProduct, HttpStatus.CREATED);
     }
 
     // 2. Get All Products
@@ -77,13 +77,13 @@ public class ProductController {
         return ResponseEntity.ok(products);
     }
 
-    @PutMapping("/update/{id}")
-    public ResponseEntity<Product> updateProduct(@PathVariable int id, @RequestBody Product updatedProduct) {
-        Product product = productService.updateProduct(id, updatedProduct);
-        if (product != null) {
-            return ResponseEntity.ok(product);
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
-    }
+    // @PutMapping("/update/{id}")
+    // public ResponseEntity<Product> updateProduct(@PathVariable int id, @RequestBody Product updatedProduct) {
+    //     Product product = productService.updateProduct(id, updatedProduct);
+    //     if (product != null) {
+    //         return ResponseEntity.ok(product);
+    //     } else {
+    //         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+    //     }
+    // }
 }

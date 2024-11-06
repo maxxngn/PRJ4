@@ -1,6 +1,7 @@
 package com.example.fashion2.service;
 
 import com.example.fashion2.model.Order;
+import com.example.fashion2.model.OrderDetail;
 import com.example.fashion2.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,12 @@ public class OrderService {
 
     // Create a new order
     public Order createOrder(Order order) {
+        List<OrderDetail> orderDetails = order.getOrderDetails();
+        if (orderDetails != null) {
+            for (OrderDetail orderDetail : orderDetails) {
+                orderDetail.setOrder(order);
+            }
+        }
         return orderRepository.save(order);
     }
 
@@ -30,7 +37,7 @@ public class OrderService {
 
     public Order updateOrderStatus(int id) {
         Order order = orderRepository.findById(id).orElse(null);
-        if (order != null && order.getStatus() < 4) {  // Giả sử status tối đa là 4
+        if (order != null && order.getStatus() < 4) { // Giả sử status tối đa là 4
             order.setStatus(order.getStatus() + 1);
             return orderRepository.save(order);
         }

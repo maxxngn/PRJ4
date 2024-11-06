@@ -31,6 +31,13 @@ public class VoucherController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    @GetMapping("/search/{code}") // New endpoint for searching voucher by code
+    public ResponseEntity<Voucher> getVoucherByCode(@PathVariable String code) {
+        return voucherService.getVoucherByCode(code)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
     @PostMapping
     public Voucher createVoucher(@RequestBody Voucher voucher) {
         return voucherService.createVoucher(voucher);

@@ -1,6 +1,7 @@
 package com.example.fashion2.service;
 
 import com.example.fashion2.model.Product;
+import com.example.fashion2.model.ProductVariant;
 import com.example.fashion2.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,8 +17,14 @@ public class ProductService {
 
     @Transactional
     public Product createProduct(Product product) {
-        product = productRepository.save(product);
-        return product;
+        // Set the product reference in each variant
+        List<ProductVariant> variants = product.getVariants();
+        if (variants != null) {
+            for (ProductVariant variant : variants) {
+                variant.setProduct(product); // Associate each variant with the product
+            }
+        }
+        return productRepository.save(product);
     }
 
     public List<Product> getAllProducts() {
@@ -55,21 +62,21 @@ public class ProductService {
     }
 
     
-    @Transactional
-    public Product updateProduct(int id, Product updatedProduct) {
-        Product existingProduct = productRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Product not found"));
+    // @Transactional
+    // public Product updateProduct(int id, Product updatedProduct) {
+    //     Product existingProduct = productRepository.findById(id)
+    //             .orElseThrow(() -> new RuntimeException("Product not found"));
 
-        existingProduct.setName(updatedProduct.getName());
-        existingProduct.setDescription(updatedProduct.getDescription());
-        existingProduct.setPrice(updatedProduct.getPrice());
-        existingProduct.setQty(updatedProduct.getQty());
-        existingProduct.setGender(updatedProduct.getGender());
-        existingProduct.setStatus(updatedProduct.isStatus());
-        existingProduct.setColors(updatedProduct.getColors());
-        existingProduct.setSizes(updatedProduct.getSizes());
-        existingProduct.setImageUrls(updatedProduct.getImageUrls());
+    //     existingProduct.setName(updatedProduct.getName());
+    //     existingProduct.setDescription(updatedProduct.getDescription());
+    //     existingProduct.setPrice(updatedProduct.getPrice());
+    //     existingProduct.setQty(updatedProduct.getQty());
+    //     existingProduct.setGender(updatedProduct.getGender());
+    //     existingProduct.setStatus(updatedProduct.isStatus());
+    //     existingProduct.setColors(updatedProduct.getColors());
+    //     existingProduct.setSizes(updatedProduct.getSizes());
+    //     existingProduct.setImageUrls(updatedProduct.getImageUrls());
         
-        return productRepository.save(existingProduct);
-    }
+    //     return productRepository.save(existingProduct);
+    // }
 }
