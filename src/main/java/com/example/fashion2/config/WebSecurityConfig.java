@@ -21,21 +21,22 @@ public class WebSecurityConfig implements WebMvcConfigurer {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .csrf().disable() // Disable CSRF
-            .authorizeHttpRequests(req -> req
-                .requestMatchers("/api/auth/**", "/api/products/**", "/api/orders/**", "/api/vouchers/**", "/api/addresses/**").permitAll()
-                .anyRequest().authenticated()
-            );
-        
+                .csrf().disable() // Disable CSRF
+                .authorizeHttpRequests(req -> req
+                        .requestMatchers("/api/auth/**", "/api/products/**", "/api/orders/**", "/api/vouchers/**",
+                                "/api/addresses/**", "/api/product-variants/**")
+                        .permitAll()
+                        .anyRequest().authenticated());
+
         return http.build(); // Thêm dấu chấm phẩy
     }
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-            .allowedOrigins("http://localhost:3000") // URL của frontend
-            .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
-            .allowedHeaders("*")
-            .allowCredentials(true);
+                .allowedOrigins("http://localhost:3000") // URL của frontend
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                .allowedHeaders("*")
+                .allowCredentials(true);
     }
 }

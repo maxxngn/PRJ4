@@ -36,8 +36,19 @@ public class AddressController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<?> createAddress(@RequestBody Address address) {
+    public ResponseEntity<Address> createAddress(@RequestBody Address address) {
         Address savedAddress = addressService.createAddress(address);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedAddress);
+        return ResponseEntity.ok(savedAddress);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Address> deleteAddress(@PathVariable int id) {
+        System.out.println("xxx123");
+        Address deletedAddress = addressService.deleteAddress(id);
+        if (deletedAddress != null) {
+            return ResponseEntity.ok(deletedAddress);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 }

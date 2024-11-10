@@ -20,4 +20,13 @@ public class AddressService {
     public Address createAddress(Address address) {
         return addressRepository.save(address);
     }
+
+    public Address deleteAddress(int id) {
+        Address address = addressRepository.findById(id).orElse(null);
+        if (address != null) {
+            addressRepository.delete(address);
+            return address;
+        }
+        return null;
+    }
 }
