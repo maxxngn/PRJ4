@@ -15,9 +15,9 @@ public class SubscriberService {
     @Autowired
     private EmailService emailService;
 
-    public Subscriber subscribe(Subscriber subscriber) {
-        Subscriber savedSubscriber = subscriberRepository.save(subscriber);
-        emailService.sendSubscriptionEmail(savedSubscriber.getEmail(), savedSubscriber.getName());
-        return savedSubscriber;
-    }
+    // public Subscriber subscribe(Subscriber subscriber) {
+    //     Subscriber savedSubscriber = subscriberRepository.save(subscriber);
+    //     emailService.sendSubscriptionEmail(savedSubscriber.getEmail(), savedSubscriber.getName());
+    //     return savedSubscriber;
+    // }
 }

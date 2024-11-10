@@ -2,6 +2,7 @@ package com.example.fashion2.dto;
 
 public class WardDTO {
     private Long id; // Đổi từ int sang Long
+    private DistrictDTO district;
     private String name;
 
     public WardDTO(Long id, String name) { // Thay đổi kiểu tham số id thành Long
@@ -15,5 +16,13 @@ public class WardDTO {
 
     public String getName() {
         return name;
+    }
+
+    public DistrictDTO getDistrict() {
+        return district;
+    }
+
+    public void setDistrict(DistrictDTO district) {
+        this.district = district;
     }
 }

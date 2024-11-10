@@ -21,10 +21,10 @@ public class NewsletterController {
         return "newsletter-form"; // имя шаблона
     }
 
-    @PostMapping
-    public String subscribe(Subscriber subscriber, Model model) {
-        subscriberService.subscribe(subscriber);
-        model.addAttribute("message", "Вы успешно подписались на рассылку с 30% скидкой!");
-        return "subscription-success"; // имя шаблона
-    }
+    // @PostMapping
+    // public String subscribe(Subscriber subscriber, Model model) {
+    //     subscriberService.subscribe(subscriber);
+    //     model.addAttribute("message", "Вы успешно подписались на рассылку с 30% скидкой!");
+    //     return "subscription-success"; // имя шаблона
+    // }
 }

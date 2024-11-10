@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -39,6 +40,33 @@ public class UserService {
             return user;
         }
         return Optional.empty();
+    }
+
+    public User updateProfile(int id, User updatedUser) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        user.setUsername(updatedUser.getUsername());
+        user.setFullname(updatedUser.getFullname());
+
+        return userRepository.save(user);
+    }
+
+    // Method to change the user's password
+    public User changePassword(int id, String oldPassword, String newPassword) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
+            throw new IllegalArgumentException("Old password is incorrect");
+        }
+
+        user.setPassword(passwordEncoder.encode(newPassword));
+        return userRepository.save(user);
+    }
+
+    public List<User> getAllUsers() {
+        return userRepository.findAll();  // Trả về tất cả người dùng từ cơ sở dữ liệu
     }
 }
 
