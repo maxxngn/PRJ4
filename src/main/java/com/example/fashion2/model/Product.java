@@ -1,6 +1,8 @@
 package com.example.fashion2.model;
 
 import jakarta.persistence.*;
+
+import java.sql.Timestamp;
 import java.util.List;
 
 @Entity
@@ -30,6 +32,9 @@ public class Product {
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProductVariant> variants;
 
+    @Column(columnDefinition = "TIMESTAMP DEFAULT NULL")
+    private Timestamp deleted_at;  // Use java.sql.Timestamp
+
     public Product() {} 
 
     // Getters and Setters
@@ -56,4 +61,7 @@ public class Product {
 
     public List<ProductVariant> getVariants() { return variants; }
     public void setVariants(List<ProductVariant> variants) { this.variants = variants; }
+
+    public Timestamp getDeleted_at() { return deleted_at; }
+    public void setDeleted_at(Timestamp deleted_at) { this.deleted_at = deleted_at; }
 }

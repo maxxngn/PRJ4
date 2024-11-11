@@ -1,14 +1,41 @@
 package com.example.fashion2.dto;
 
 public class ProductVariantDTO {
-    private int id;
+    private String size;
+    private String color;
+    private int qty;
+    private int productId; // To associate the variant with a product
 
     // Getters and Setters
-    public int getId() {
-        return id;
+    public String getSize() {
+        return size;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setSize(String size) {
+        this.size = size;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    public int getQty() {
+        return qty;
+    }
+
+    public void setQty(int qty) {
+        this.qty = qty;
+    }
+
+    public int getProductId() {
+        return productId;
+    }
+
+    public void setProductId(int productId) {
+        this.productId = productId;
     }
 }

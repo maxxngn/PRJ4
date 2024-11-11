@@ -1,6 +1,7 @@
 package com.example.fashion2.controller;
 
 import com.example.fashion2.dto.DistrictDTO;
+import com.example.fashion2.dto.OrderResponseDTO;
 import com.example.fashion2.dto.ProvinceDTO;
 import com.example.fashion2.dto.WardDTO;
 import com.example.fashion2.model.Order;
@@ -8,6 +9,8 @@ import com.example.fashion2.service.DistrictService;
 import com.example.fashion2.service.OrderService;
 import com.example.fashion2.service.ProvinceService;
 import com.example.fashion2.service.WardService;
+
+import jakarta.mail.MessagingException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -31,14 +34,20 @@ public class OrderController {
     private WardService wardService;
 
     @PostMapping
-    public ResponseEntity<Order> createOrder(@RequestBody Order order) {
-        Order createdOrder = orderService.createOrder(order);
-        return ResponseEntity.ok(createdOrder);
+    public ResponseEntity<?> createOrder(@RequestBody Order order) {
+        try {
+            Order createdOrder = orderService.createOrder(order);
+            return ResponseEntity.ok(createdOrder);
+        } catch (MessagingException e) {
+            return ResponseEntity.status(500).body("Error sending confirmation email: " + e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Error creating order: " + e.getMessage());
+        }
     }
 
     @GetMapping
-    public ResponseEntity<List<Order>> getAllOrders() {
-        List<Order> orders = orderService.getAllOrders();
+    public ResponseEntity<List<OrderResponseDTO>> getAllOrders() {
+        List<OrderResponseDTO> orders = orderService.getAllOrders();
         return ResponseEntity.ok(orders);
     }
 
@@ -88,5 +97,11 @@ public class OrderController {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<OrderResponseDTO>> getOrdersByUserId(@PathVariable int userId) {
+        List<OrderResponseDTO> orders = orderService.getOrdersByUserId(userId);
+        return ResponseEntity.ok(orders);
     }
 }

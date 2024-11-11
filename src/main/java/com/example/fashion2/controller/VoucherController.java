@@ -35,7 +35,7 @@ public class VoucherController {
     public ResponseEntity<Voucher> getVoucherByCode(@PathVariable String code) {
         return voucherService.getVoucherByCode(code)
                 .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+                .orElse(ResponseEntity.notFound().build());  // Returns 404 if voucher not found or qty is 0
     }
 
     @PostMapping

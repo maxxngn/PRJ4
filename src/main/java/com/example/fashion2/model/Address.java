@@ -13,7 +13,6 @@ public class Address {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
-    @JsonIgnore // Prevents infinite recursion during JSON serialization
     private User user;
 
     private String phone;

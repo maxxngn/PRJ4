@@ -41,4 +41,12 @@ public class ProductVariant {
 
     public Product getProduct() { return product; }
     public void setProduct(Product product) { this.product = product; }
+
+    public int getProductId() {
+        return product != null ? product.getId() : 0; // Return product ID if product exists, else 0
+    }
+
+    public String getProductName() {
+        return product != null ? product.getName() : ""; // Return product name if product exists, else empty string
+    }
 }

@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.List;
 
 @Service
@@ -28,11 +30,11 @@ public class ProductService {
     }
 
     public List<Product> getAllProducts() {
-        return productRepository.findAll();
+        return productRepository.findAllActiveProductsByLIFO();
     }
 
     public List<Product> getProductsByGender(String gender) {
-        return productRepository.findByGender(gender);
+        return productRepository.findActiveProductsByGenderLIFO(gender);
     }
 
     public List<Product> getProductsForMen() {
@@ -58,25 +60,22 @@ public class ProductService {
     @Transactional
     public void deleteProduct(int id) {
         Product product = productRepository.findById(id).orElseThrow(() -> new RuntimeException("Product not found"));
-        productRepository.delete(product);
+        product.setDeleted_at(Timestamp.from(Instant.now())); // Set current timestamp as deleted_at
+        productRepository.save(product); // Save changes to the database
     }
 
-    
-    // @Transactional
-    // public Product updateProduct(int id, Product updatedProduct) {
-    //     Product existingProduct = productRepository.findById(id)
-    //             .orElseThrow(() -> new RuntimeException("Product not found"));
+    @Transactional
+    public Product updateProduct(int id, Product updatedProduct) {
+        Product existingProduct = productRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Product not found"));
 
-    //     existingProduct.setName(updatedProduct.getName());
-    //     existingProduct.setDescription(updatedProduct.getDescription());
-    //     existingProduct.setPrice(updatedProduct.getPrice());
-    //     existingProduct.setQty(updatedProduct.getQty());
-    //     existingProduct.setGender(updatedProduct.getGender());
-    //     existingProduct.setStatus(updatedProduct.isStatus());
-    //     existingProduct.setColors(updatedProduct.getColors());
-    //     existingProduct.setSizes(updatedProduct.getSizes());
-    //     existingProduct.setImageUrls(updatedProduct.getImageUrls());
-        
-    //     return productRepository.save(existingProduct);
-    // }
+        existingProduct.setName(updatedProduct.getName());
+        existingProduct.setDescription(updatedProduct.getDescription());
+        existingProduct.setPrice(updatedProduct.getPrice());
+        existingProduct.setGender(updatedProduct.getGender());
+        existingProduct.setStatus(updatedProduct.isStatus());
+        existingProduct.setImageUrls(updatedProduct.getImageUrls());
+
+        return productRepository.save(existingProduct);
+    }
 }

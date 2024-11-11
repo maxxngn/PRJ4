@@ -31,7 +31,12 @@ public class VoucherService {
     }
 
     public Optional<Voucher> getVoucherByCode(String code) {
-        return voucherRepository.findByCode(code); // Assuming you have this method in your repository
+        Optional<Voucher> voucher = voucherRepository.findByCode(code);
+        // Check if voucher is present and if its quantity is greater than 0
+        if (voucher.isPresent() && voucher.get().getQty() == 0) {
+            return Optional.empty();  // Return empty Optional if quantity is 0
+        }
+        return voucher;
     }
 
     public Voucher updateVoucher(int id, Voucher voucherDetails) {
