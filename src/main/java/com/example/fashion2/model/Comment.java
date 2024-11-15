@@ -1,5 +1,7 @@
 package com.example.fashion2.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -11,11 +13,15 @@ public class Comment {
     
     @ManyToOne
     @JoinColumn(name = "product_id")
+    @JsonIgnore
     private Product product;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+
+    // rating
+    private int rating;
 
     private String content;
 
@@ -52,5 +58,13 @@ public class Comment {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public int getRating() {
+        return rating;
+    }
+
+    public void setRating(int rating) {
+        this.rating = rating;
     }
 }

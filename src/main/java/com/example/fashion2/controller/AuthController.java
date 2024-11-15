@@ -1,6 +1,8 @@
 package com.example.fashion2.controller;
 
+import com.example.fashion2.model.Subscriber;
 import com.example.fashion2.model.User;
+import com.example.fashion2.service.SubscriberService;
 import com.example.fashion2.service.UserService;
 
 import java.util.List;
@@ -19,6 +21,9 @@ public class AuthController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private SubscriberService subscriberService;
 
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody User user) {
@@ -83,5 +88,11 @@ public class AuthController {
         } catch (Exception e) {
             return ResponseEntity.status(500).body("Failed to retrieve users: " + e.getMessage());
         }
+    }
+
+    @PostMapping("/subscribe")
+    public ResponseEntity<String> subscribe(@RequestBody Subscriber subscriber) {
+        String message = subscriberService.saveSubscriber(subscriber);
+        return ResponseEntity.ok(message);
     }
 }

@@ -39,4 +39,14 @@ public class ProductVariantController {
             return ResponseEntity.status(404).body("Product Variant not found");
         }
     }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<String> deleteProductVariant(@PathVariable int id) {
+        boolean isDeleted = productVariantService.deleteProductVariant(id);
+        if (isDeleted) {
+            return ResponseEntity.ok("Product Variant deleted successfully");
+        } else {
+            return ResponseEntity.status(404).body("Product Variant not found");
+        }
+    }
 }

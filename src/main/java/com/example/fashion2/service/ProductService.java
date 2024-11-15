@@ -4,11 +4,16 @@ import com.example.fashion2.model.Product;
 import com.example.fashion2.model.ProductVariant;
 import com.example.fashion2.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -33,35 +38,59 @@ public class ProductService {
         return productRepository.findAllActiveProductsByLIFO();
     }
 
-    public List<Product> getProductsByGender(String gender) {
-        return productRepository.findActiveProductsByGenderLIFO(gender);
+    public Page<Product> searchProducts(String name, String gender, String category, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return productRepository.findProductsByFilters(
+            name != null && !name.isEmpty() ? name : null,
+            gender != null && !gender.isEmpty() ? gender : null,
+            category != null && !category.isEmpty() ? category : null,
+            pageable
+        );
     }
 
-    public List<Product> getProductsForMen() {
-        return getProductsByGender("man");
+    public List<Product> getProductsByGenderAndCategoryAndSort(String gender, String category, String sortDirection) {
+        return productRepository.findProductsByGenderCategoryAndPrice(gender, category, sortDirection);
     }
-
-    public List<Product> getProductsForWomen() {
-        return getProductsByGender("women");
+    
+    public List<Product> getProductsForMen(String category, String sortDirection) {
+        return getProductsByGenderAndCategoryAndSort("man", category, sortDirection);
     }
-
-    public List<Product> getProductsForKids() {
-        return getProductsByGender("kid");
+    
+    public List<Product> getProductsForWomen(String category, String sortDirection) {
+        return getProductsByGenderAndCategoryAndSort("women", category, sortDirection);
     }
-
-    public List<Product> getProductsForUnisex() {
-        return getProductsByGender("unisex");
+    
+    public List<Product> getProductsForKids(String category, String sortDirection) {
+        return getProductsByGenderAndCategoryAndSort("kid", category, sortDirection);
+    }
+    
+    public List<Product> getProductsForUnisex(String category, String sortDirection) {
+        return getProductsByGenderAndCategoryAndSort("unisex", category, sortDirection);
     }
 
     public Product getProductById(int id) {
-        return productRepository.findById(id).orElse(null);
+        Product product = productRepository.findById(id).orElse(null);
+        if (product != null) {
+            // Ensure that the product's comments are loaded for calculating the average rating and total ratings
+            product.getComments().size(); // This will initialize the comments collection
+        }
+        return product;
     }
 
     @Transactional
-    public void deleteProduct(int id) {
-        Product product = productRepository.findById(id).orElseThrow(() -> new RuntimeException("Product not found"));
-        product.setDeleted_at(Timestamp.from(Instant.now())); // Set current timestamp as deleted_at
-        productRepository.save(product); // Save changes to the database
+    public boolean deleteProduct(int id) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Product not found"));
+
+        if (product.getDeletedAt() == null) {
+            product.setDeletedAt(Timestamp.from(Instant.now())); // Gán thời gian hiện tại
+            productRepository.save(product);
+            return true; // Đã xóa
+        } else {
+            product.setDeletedAt(null); // Hủy xóa
+            productRepository.save(product);
+            return false; // Đã hủy xóa
+        }
     }
 
     @Transactional
