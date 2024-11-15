@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import java.sql.Timestamp;
 import java.util.List;
 
+import org.hibernate.annotations.Where;
+
 @Entity
 @Table(name = "Products")
 public class Product {
@@ -21,6 +23,9 @@ public class Product {
     @Column(length = 10)
     private String gender;
 
+    @Column(length = 50)
+    private String category;
+
     @Column(columnDefinition = "BOOLEAN DEFAULT TRUE")
     private boolean status;
 
@@ -30,10 +35,12 @@ public class Product {
     private List<String> imageUrls; // List of image URLs
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Where(clause = "deleted_at IS NULL")
     private List<ProductVariant> variants;
 
     @Column(columnDefinition = "TIMESTAMP DEFAULT NULL")
     private Timestamp deleted_at;  // Use java.sql.Timestamp
+
 
     public Product() {} 
 
@@ -50,6 +57,9 @@ public class Product {
     public int getPrice() { return price; }
     public void setPrice(int price) { this.price = price; }
 
+    public String getCategory() { return category; }
+    public void setCategory(String category) { this.category = category; }
+
     public String getGender() { return gender; }
     public void setGender(String gender) { this.gender = gender; }
 
@@ -62,6 +72,6 @@ public class Product {
     public List<ProductVariant> getVariants() { return variants; }
     public void setVariants(List<ProductVariant> variants) { this.variants = variants; }
 
-    public Timestamp getDeleted_at() { return deleted_at; }
-    public void setDeleted_at(Timestamp deleted_at) { this.deleted_at = deleted_at; }
+    public Timestamp getDeletedAt() { return deleted_at; }
+    public void setDeletedAt(Timestamp deleted_at) { this.deleted_at = deleted_at; }
 }

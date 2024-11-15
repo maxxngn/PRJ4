@@ -3,6 +3,7 @@ package com.example.fashion2.controller;
 import com.example.fashion2.model.Product;
 import com.example.fashion2.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,10 +25,15 @@ public class ProductController {
         return new ResponseEntity<>(createdProduct, HttpStatus.CREATED);
     }
 
-    // 2. Get All Products
     @GetMapping("/all")
-    public ResponseEntity<List<Product>> getAllProducts() {
-        List<Product> products = productService.getAllProducts();
+    public ResponseEntity<Page<Product>> getAllProducts(
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String gender,
+            @RequestParam(required = false) String category,
+            @RequestParam(defaultValue = "0") int page, // Default to page 0
+            @RequestParam(defaultValue = "10") int size // Default to size 10
+    ) {
+        Page<Product> products = productService.searchProducts(name, gender, category, page, size);
         return ResponseEntity.ok(products);
     }
 
@@ -45,45 +51,45 @@ public class ProductController {
     // 5. Delete Product
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> deleteProduct(@PathVariable int id) {
-        try {
-            productService.deleteProduct(id);
+        // Thực hiện xóa mềm hoặc hủy xóa
+        boolean isDeleted = productService.deleteProduct(id);
+
+        if (isDeleted == true) {
             return ResponseEntity.ok("Product deleted successfully");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } else {
+            return ResponseEntity.ok("Product restore successfully");
         }
     }
 
     @GetMapping("/gender/man")
-    public ResponseEntity<List<Product>> getProductsForMen() {
-        List<Product> products = productService.getProductsForMen();
+    public ResponseEntity<List<Product>> getProductsForMen(
+            @RequestParam(required = false) String category,
+            @RequestParam(defaultValue = "asc") String sortDirection) {
+        List<Product> products = productService.getProductsForMen(category, sortDirection);
         return ResponseEntity.ok(products);
     }
 
     @GetMapping("/gender/women")
-    public ResponseEntity<List<Product>> getProductsForWomen() {
-        List<Product> products = productService.getProductsForWomen();
+    public ResponseEntity<List<Product>> getProductsForWomen(
+            @RequestParam(required = false) String category,
+            @RequestParam(defaultValue = "asc") String sortDirection) {
+        List<Product> products = productService.getProductsForWomen(category, sortDirection);
         return ResponseEntity.ok(products);
     }
 
     @GetMapping("/gender/kid")
-    public ResponseEntity<List<Product>> getProductsForKids() {
-        List<Product> products = productService.getProductsForKids();
+    public ResponseEntity<List<Product>> getProductsForKids(
+            @RequestParam(required = false) String category,
+            @RequestParam(defaultValue = "asc") String sortDirection) {
+        List<Product> products = productService.getProductsForKids(category, sortDirection);
         return ResponseEntity.ok(products);
     }
 
     @GetMapping("/gender/unisex")
-    public ResponseEntity<List<Product>> getProductsForUnisex() {
-        List<Product> products = productService.getProductsForUnisex();
+    public ResponseEntity<List<Product>> getProductsForUnisex(
+            @RequestParam(required = false) String category,
+            @RequestParam(defaultValue = "asc") String sortDirection) {
+        List<Product> products = productService.getProductsForUnisex(category, sortDirection);
         return ResponseEntity.ok(products);
-    }
-
-    @PutMapping("/update/{id}")
-    public ResponseEntity<Product> updateProduct(@PathVariable int id, @RequestBody Product updatedProduct) {
-        Product product = productService.updateProduct(id, updatedProduct);
-        if (product != null) {
-            return ResponseEntity.ok(product);
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
     }
 }

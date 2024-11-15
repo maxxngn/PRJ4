@@ -17,6 +17,9 @@ public class Comment {
     @JoinColumn(name = "user_id")
     private User user;
 
+    // rating
+    private int rating;
+
     private String content;
 
     public Comment() {}
@@ -52,5 +55,13 @@ public class Comment {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public int getRating() {
+        return rating;
+    }
+
+    public void setRating(int rating) {
+        this.rating = rating;
     }
 }

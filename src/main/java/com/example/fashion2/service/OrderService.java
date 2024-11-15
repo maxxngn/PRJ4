@@ -87,11 +87,21 @@ public class OrderService {
                 }
             }
 
+            // Ensure address is valid and assign it to the order
             if (order.getAddress() != null && order.getAddress().getId() != 0) {
                 order.setAddress(addressRepository.findById(order.getAddress().getId())
-                        .orElseThrow(() -> new IllegalArgumentException("Address not found with ID " + order.getAddress().getId())));
+                        .orElseThrow(() -> new IllegalArgumentException(
+                                "Address not found with ID " + order.getAddress().getId())));
             }
-        
+
+            // Add shipping info (phone, address) to order (this assumes phone is part of
+            // Address)
+            if (order.getAddress() != null) {
+                String shippingAddress = order.getAddress().getAddress(); // Shipping address from Address
+                String shippingPhone = order.getPhone(); // Shipping phone from order itself
+                System.out.println("Shipping to: " + shippingAddress + " Phone: " + shippingPhone);
+            }
+
             order.getOrderDetails().forEach(orderDetail -> orderDetail.setOrder(order));
 
             // Save the order with the updated orderDetails
@@ -102,7 +112,14 @@ public class OrderService {
             if (order.getAddress() != null && order.getAddress().getUser() != null) {
                 String toEmail = order.getAddress().getUser().getEmail();
                 String subject = "Order Confirmation #" + createdOrder.getId();
-                String body = "Thank you for your order!";
+                String body = "Thank you for your order!\n\n"
+                        + "Order ID: " + createdOrder.getId() + "\n"
+                        + "Total Price: $" + order.getPrice() + "\n"
+                        + "Shipping to: " + order.getAddress().getAddress() + "\n"
+                        + "Phone: " + order.getPhone() + "\n\n"
+                        + "We will process your order shortly.";
+
+                // Send the email with order confirmation
                 emailService.sendEmail(toEmail, subject, body);
             } else {
                 throw new MessagingException(
@@ -125,6 +142,10 @@ public class OrderService {
                 .stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
+    }
+
+    public List<Order> getAllOrder() {
+        return orderRepository.findAll();
     }
 
     public OrderResponseDTO convertToDto(Order order) {
@@ -180,7 +201,7 @@ public class OrderService {
             });
         }
         return order;
-    }    
+    }
 
     public Order updateOrderStatus(int id) {
         Order order = orderRepository.findById(id).orElse(null);
@@ -201,12 +222,12 @@ public class OrderService {
     }
 
     public List<OrderResponseDTO> getOrdersByUserId(int userId) {
-        // Find all orders where the user's address has the given user ID
-        List<Order> orders = orderRepository.findByAddress_User_Id(userId);
-
+        // Find all orders where the user's address has the given user ID, sorted by ID in descending order
+        List<Order> orders = orderRepository.findByAddress_User_Id(userId, Sort.by(Sort.Order.desc("id")));
+    
         // Convert orders to DTO
         return orders.stream()
-                .map(this::convertToDto)
-                .collect(Collectors.toList());
+                     .map(this::convertToDto)
+                     .collect(Collectors.toList());
     }
 }

@@ -1,5 +1,7 @@
 package com.example.fashion2.model;
 
+import java.sql.Timestamp;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.*;
@@ -18,6 +20,9 @@ public class ProductVariant {
     private String color;
 
     private int qty;
+
+    @Column(columnDefinition = "TIMESTAMP DEFAULT NULL")
+    private Timestamp deleted_at;
 
     @ManyToOne
     @JoinColumn(name = "product_id")
@@ -49,4 +54,7 @@ public class ProductVariant {
     public String getProductName() {
         return product != null ? product.getName() : ""; // Return product name if product exists, else empty string
     }
+
+    public Timestamp getDeleted_at() { return deleted_at; }
+    public void setDeleted_at(Timestamp deleted_at) { this.deleted_at = deleted_at; }
 }

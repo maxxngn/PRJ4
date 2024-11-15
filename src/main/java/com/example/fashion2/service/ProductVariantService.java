@@ -7,6 +7,10 @@ import com.example.fashion2.model.ProductVariant;
 import com.example.fashion2.repository.ProductRepository;
 import com.example.fashion2.repository.ProductVariantRepository;
 
+import jakarta.transaction.Transactional;
+
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -85,5 +89,21 @@ public class ProductVariantService {
 
         dto.setProduct(productDTO);
         return dto;
+    }
+
+    @Transactional
+    public boolean deleteProductVariant(int id) {
+        ProductVariant productVariant = productVariantRepository.findById(id)
+        .orElseThrow(() -> new RuntimeException("Product variant not found"));
+
+        if(productVariant.getDeleted_at() == null) {
+            productVariant.setDeleted_at(Timestamp.from(Instant.now()));
+            productVariantRepository.save(productVariant);
+            return true;
+        } else {
+            productVariant.setDeleted_at(null);
+            productVariantRepository.save(productVariant);
+            return false;
+        }
     }
 }
