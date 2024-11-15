@@ -69,7 +69,12 @@ public class ProductService {
     }
 
     public Product getProductById(int id) {
-        return productRepository.findById(id).orElse(null);
+        Product product = productRepository.findById(id).orElse(null);
+        if (product != null) {
+            // Ensure that the product's comments are loaded for calculating the average rating and total ratings
+            product.getComments().size(); // This will initialize the comments collection
+        }
+        return product;
     }
 
     @Transactional

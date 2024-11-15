@@ -41,6 +41,8 @@ public class Product {
     @Column(columnDefinition = "TIMESTAMP DEFAULT NULL")
     private Timestamp deleted_at;  // Use java.sql.Timestamp
 
+    @OneToMany(mappedBy = "product")
+    private List<Comment> comments; 
 
     public Product() {} 
 
@@ -74,4 +76,21 @@ public class Product {
 
     public Timestamp getDeletedAt() { return deleted_at; }
     public void setDeletedAt(Timestamp deleted_at) { this.deleted_at = deleted_at; }
+
+    public List<Comment> getComments() { return comments; }
+    public void setComments(List<Comment> comments) { this.comments = comments; }
+
+    // Calculate the total number of comments and the average rating
+    @Transient  // This annotation ensures it won't be stored in the database
+    public double getAverageRating() {
+        return comments.stream()
+                .mapToInt(Comment::getRating)
+                .average()
+                .orElse(0);
+    }
+
+    @Transient
+    public long getTotalRatings() {
+        return comments.size();
+    }
 }
