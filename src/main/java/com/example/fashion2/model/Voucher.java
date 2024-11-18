@@ -1,5 +1,7 @@
 package com.example.fashion2.model;
 
+import java.sql.Timestamp;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -21,6 +23,11 @@ public class Voucher {
         this.status = true; // Set default status to true (active)
     }
 
+    // add deleted at timestamp column can null
+    @Column(columnDefinition = "TIMESTAMP DEFAULT NULL")
+    private Timestamp deleted_at;  // Use java.sql.Timestamp
+
+
     // Getters and Setters
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
@@ -39,4 +46,7 @@ public class Voucher {
 
     public boolean isStatus() { return status; }
     public void setStatus(boolean status) { this.status = status; }
+
+    public Timestamp getDeleted_at() { return deleted_at; }
+    public void setDeleted_at(Timestamp deleted_at) { this.deleted_at = deleted_at; }
 }
