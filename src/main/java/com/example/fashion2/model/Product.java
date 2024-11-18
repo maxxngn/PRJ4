@@ -7,6 +7,8 @@ import java.util.List;
 
 import org.hibernate.annotations.Where;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "Products")
 public class Product {
@@ -23,8 +25,9 @@ public class Product {
     @Column(length = 10)
     private String gender;
 
-    @Column(length = 50)
-    private String category;
+    @ManyToOne // Many products can belong to one category
+    @JoinColumn(name = "category_id") // The foreign key column name
+    private Category category;
 
     @Column(columnDefinition = "BOOLEAN DEFAULT TRUE")
     private boolean status;
@@ -42,6 +45,7 @@ public class Product {
     private Timestamp deleted_at;  // Use java.sql.Timestamp
 
     @OneToMany(mappedBy = "product")
+    @JsonIgnore
     private List<Comment> comments; 
 
     public Product() {} 
@@ -59,8 +63,8 @@ public class Product {
     public int getPrice() { return price; }
     public void setPrice(int price) { this.price = price; }
 
-    public String getCategory() { return category; }
-    public void setCategory(String category) { this.category = category; }
+    public Category getCategory() { return category; }
+    public void setCategory(Category category) { this.category = category; }
 
     public String getGender() { return gender; }
     public void setGender(String gender) { this.gender = gender; }

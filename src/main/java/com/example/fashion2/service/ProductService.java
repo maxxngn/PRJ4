@@ -38,8 +38,10 @@ public class ProductService {
         return productRepository.findAllActiveProductsByLIFO();
     }
 
-    public Page<Product> searchProducts(String name, String gender, String category, int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
+    public Page<Product> searchProducts(String name, String gender, String category, int page, int size, Sort sort) {
+        Pageable pageable = PageRequest.of(page, size, sort);
+        
+        // Fetch products with category eagerly loaded
         return productRepository.findProductsByFilters(
             name != null && !name.isEmpty() ? name : null,
             gender != null && !gender.isEmpty() ? gender : null,
@@ -47,7 +49,7 @@ public class ProductService {
             pageable
         );
     }
-
+    
     public List<Product> getProductsByGenderAndCategoryAndSort(String gender, String category, String sortDirection) {
         return productRepository.findProductsByGenderCategoryAndPrice(gender, category, sortDirection);
     }
@@ -93,17 +95,18 @@ public class ProductService {
         }
     }
 
+    // Update Product
     @Transactional
-    public Product updateProduct(int id, Product updatedProduct) {
+    public Product updateProduct(int id, Product product) {
         Product existingProduct = productRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Product not found"));
 
-        existingProduct.setName(updatedProduct.getName());
-        existingProduct.setDescription(updatedProduct.getDescription());
-        existingProduct.setPrice(updatedProduct.getPrice());
-        existingProduct.setGender(updatedProduct.getGender());
-        existingProduct.setStatus(updatedProduct.isStatus());
-        existingProduct.setImageUrls(updatedProduct.getImageUrls());
+        existingProduct.setName(product.getName());
+        existingProduct.setDescription(product.getDescription());
+        existingProduct.setPrice(product.getPrice());
+        existingProduct.setCategory(product.getCategory());
+        existingProduct.setGender(product.getGender());
+        existingProduct.setImageUrls(product.getImageUrls());
 
         return productRepository.save(existingProduct);
     }
