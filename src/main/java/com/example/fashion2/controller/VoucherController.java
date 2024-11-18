@@ -49,7 +49,7 @@ public class VoucherController {
         return ResponseEntity.ok(updatedVoucher);
     }
 
-    @PutMapping("/delete/{id}") // Change this endpoint for deletion to an update
+    @DeleteMapping("/{id}") // Change this endpoint for deletion to an update
     public ResponseEntity<Void> deleteVoucher(@PathVariable int id) {
         voucherService.deleteVoucher(id);
         return ResponseEntity.noContent().build();
