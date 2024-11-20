@@ -3,11 +3,13 @@ package com.example.fashion2.model;
 import java.sql.Timestamp;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "ProductVariants")
+@JsonIgnoreProperties({"product"}) 
 public class ProductVariant {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,10 +26,10 @@ public class ProductVariant {
     @Column(columnDefinition = "TIMESTAMP DEFAULT NULL")
     private Timestamp deleted_at;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "product_id")
-    @JsonIgnore
-    private Product product;
+    // @JsonIgnore
+    private Product product;    
 
     public ProductVariant() {}
 

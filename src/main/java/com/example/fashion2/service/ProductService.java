@@ -3,6 +3,7 @@ package com.example.fashion2.service;
 import com.example.fashion2.model.Product;
 import com.example.fashion2.model.ProductVariant;
 import com.example.fashion2.repository.ProductRepository;
+import com.example.fashion2.repository.ProductVariantRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -21,6 +22,8 @@ public class ProductService {
 
     @Autowired
     private ProductRepository productRepository;
+    @Autowired
+    private ProductVariantRepository productVariantRepository;
 
     @Transactional
     public Product createProduct(Product product) {
@@ -109,5 +112,19 @@ public class ProductService {
         existingProduct.setImageUrls(product.getImageUrls());
 
         return productRepository.save(existingProduct);
+    }
+
+    public ProductVariant getProductVariantWithProduct(int id) {
+        return productVariantRepository.findProductVariantWithProduct(id);
+    }
+
+    // Lấy tên sản phẩm từ ProductVariant
+    public String getProductNameFromVariant(int variantId) {
+        ProductVariant productVariant = productVariantRepository.findById(variantId).orElse(null);
+        if (productVariant != null && productVariant.getProduct() != null) {
+            return productVariant.getProduct().getName();
+        } else {
+            return "Product not found";
+        }
     }
 }
