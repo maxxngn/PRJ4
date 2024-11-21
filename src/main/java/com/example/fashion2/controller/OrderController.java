@@ -46,13 +46,14 @@ public class OrderController {
     }
 
     @GetMapping
-    public ResponseEntity<List<OrderResponseDTO>> getAllOrders() {
-        List<OrderResponseDTO> orders = orderService.getAllOrders();
+    public ResponseEntity<List<OrderResponseDTO>> getAllOrders(@RequestParam(required = false) Integer status) {
+        List<OrderResponseDTO> orders = orderService.getAllOrders(status);
         return ResponseEntity.ok(orders);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Order> getOrderById(@PathVariable int id) {
+        System.out.println("xxx");
         Order order = orderService.getOrderById(id);
         if (order != null) {
             return ResponseEntity.ok(order);
@@ -89,6 +90,12 @@ public class OrderController {
         }
     }
 
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<OrderResponseDTO>> getOrdersByUserId(@PathVariable int userId) {
+        List<OrderResponseDTO> orders = orderService.getOrdersByUserId(userId);
+        return ResponseEntity.ok(orders);
+    }
+
     @PutMapping("/cancel/{id}")
     public ResponseEntity<Order> cancelOrder(@PathVariable int id) {
         Order updatedOrder = orderService.cancelOrder(id);
@@ -99,9 +106,13 @@ public class OrderController {
         }
     }
 
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<List<OrderResponseDTO>> getOrdersByUserId(@PathVariable int userId) {
-        List<OrderResponseDTO> orders = orderService.getOrdersByUserId(userId);
-        return ResponseEntity.ok(orders);
+    @PutMapping("/accept-cancel/{id}")
+    public ResponseEntity<Order> acceptCancelOrder(@PathVariable int id) {
+        Order updatedOrder = orderService.acceptCancelOrder(id);
+        if (updatedOrder != null) {
+            return ResponseEntity.ok(updatedOrder);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 }

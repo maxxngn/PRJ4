@@ -11,4 +11,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface OrderRepository extends JpaRepository<Order, Integer> {
     List<Order> findByAddress_User_Id(int userId, Sort sort);
+    List<Order> findByStatus(Integer status, Sort sort);
 }

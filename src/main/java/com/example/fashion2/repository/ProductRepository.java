@@ -34,7 +34,7 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
         @Query("SELECT p FROM Product p " +
                         "WHERE p.deleted_at IS NULL " +
                         "AND p.gender = :gender " +
-                        "AND (:category IS NULL OR p.category = :category) " +
+                        "AND (:category IS NULL OR p.category.name = :category) " +
                         "ORDER BY CASE WHEN :sortDirection = 'asc' THEN p.price END ASC, " +
                         "             CASE WHEN :sortDirection = 'desc' THEN p.price END DESC")
         List<Product> findProductsByGenderCategoryAndPrice(String gender, String category, String sortDirection);
