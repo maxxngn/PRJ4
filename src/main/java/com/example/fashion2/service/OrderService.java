@@ -40,111 +40,106 @@ public class OrderService {
 
     @Transactional
     public Order createOrder(Order order) throws MessagingException {
+        // Get the list of order details
         List<OrderDetail> orderDetails = order.getOrderDetails();
-        if (orderDetails != null) {
-            // Fetch the voucher once if it's part of the order
-            Voucher voucher = order.getVoucher();
+        if (orderDetails == null || orderDetails.isEmpty()) {
+            throw new IllegalArgumentException("The order has no details.");
+        }
+
+        // Process the voucher if present
+        Voucher voucher = null;
+        if (order.getVoucher() != null) {
+            voucher = voucherRepository.findById(order.getVoucher().getId())
+                    .orElseThrow(() -> new IllegalArgumentException("Voucher does not exist."));
+        }
+
+        // Process each OrderDetail
+        for (OrderDetail orderDetail : orderDetails) {
+            // Link OrderDetail to Order
+            orderDetail.setOrder(order);
+
+            // Load the full ProductVariant
+            ProductVariant productVariant = productVariantRepository
+                    .findById(orderDetail.getProductVariant().getId())
+                    .orElseThrow(() -> new IllegalArgumentException("ProductVariant does not exist."));
+            orderDetail.setProductVariant(productVariant); // Set full ProductVariant into OrderDetail
+
+            // Check stock
+            int updatedQty = productVariant.getQty() - orderDetail.getQuantity();
+            if (updatedQty < 0) {
+                throw new IllegalArgumentException("Not enough stock for product: " + productVariant.getId());
+            }
+            productVariant.setQty(updatedQty);
+            productVariantRepository.save(productVariant);
+
+            // Process the voucher quantity (if applicable)
             if (voucher != null) {
-                voucher = voucherRepository.findById(voucher.getId())
-                        .orElseThrow(() -> new IllegalArgumentException("Voucher not found"));
-            }
-
-            // Process each order detail
-            for (OrderDetail orderDetail : orderDetails) {
-                // Set the order for each orderDetail
-                orderDetail.setOrder(order);
-
-                // Fetch the productVariant from repository to ensure we have the latest data
-                ProductVariant productVariant = productVariantRepository
-                        .findById(orderDetail.getProductVariant().getId())
-                        .orElseThrow(() -> new IllegalArgumentException("Product variant not found"));
-
-                // Decrement the quantity of the product variant based on the order quantity
-                int updatedQty = productVariant.getQty() - orderDetail.getQuantity();
-                if (updatedQty < 0) {
-                    throw new IllegalArgumentException(
-                            "Not enough stock for product variant: " + productVariant.getId());
+                int updatedVoucherQty = voucher.getQty() - 1; // Each order uses 1 voucher
+                if (updatedVoucherQty < 0) {
+                    throw new IllegalArgumentException("Voucher is out of stock.");
                 }
-                productVariant.setQty(updatedQty); // Update the quantity
-
-                // Save the updated product variant
-                productVariantRepository.save(productVariant);
-
-                // Decrement the quantity of the voucher (if any) based on the order quantity
-                if (voucher != null) {
-                    int updatedVoucherQty = voucher.getQty() - 1; // Assuming voucher usage per order
-                    if (updatedVoucherQty < 0) {
-                        throw new IllegalArgumentException("Voucher is out of stock.");
-                    }
-                    voucher.setQty(updatedVoucherQty);
-                }
-            }
-
-            // Ensure the address is valid and assign it to the order
-            if (order.getAddress() != null && order.getAddress().getId() != 0) {
-                order.setAddress(addressRepository.findById(order.getAddress().getId())
-                        .orElseThrow(() -> new IllegalArgumentException(
-                                "Address not found with ID " + order.getAddress().getId())));
-            }
-
-            // Add shipping info (phone, address) to order
-            if (order.getAddress() != null) {
-                String shippingAddress = order.getAddress().getAddress();
-                String shippingPhone = order.getPhone();
-            }
-
-            order.getOrderDetails().forEach(orderDetail -> orderDetail.setOrder(order));
-
-            // Save the order with updated orderDetails
-            Order createdOrder = orderRepository.save(order);
-
-            // Build email body including order details and product info
-            StringBuilder emailBody = new StringBuilder("Thank you for your order!\n\n")
-                    .append("Order ID: ").append(createdOrder.getId()).append("\n")
-                    .append("Total Price: $").append(order.getPrice()).append("\n")
-                    .append("Shipping to: ").append(order.getAddress().getAddress()).append("\n")
-                    .append("Phone: ").append(order.getPhone()).append("\n\n")
-                    .append("Order Details:\n");
-
-            // Loop through order details to include product info in email
-            for (OrderDetail detail : orderDetails) {
-                ProductVariant productVariant = detail.getProductVariant();
-                if (productVariant.getProduct() != null) {
-                    Product product = productVariant.getProduct();
-                    emailBody.append("Product Name: ").append(product.getName())
-                            .append("\nDescription: ").append(product.getDescription())
-                            .append("\nPrice: $").append(detail.getPrice())
-                            .append("\nQuantity: ").append(detail.getQuantity())
-                            .append("\n\n");
-                }
-            }
-
-            // Check if the user has a valid address and email
-            if (order.getAddress() != null && order.getAddress().getUser() != null) {
-                String toEmail = order.getAddress().getUser().getEmail();
-                String subject = "Order Confirmation #" + createdOrder.getId();
-
-                // Send the email with order confirmation and details
-                emailService.sendEmail(toEmail, subject, emailBody.toString());
-            } else {
-                throw new MessagingException(
-                        "User's email address is not available for Address ID: "
-                                + (order.getAddress() != null ? order.getAddress().getId() : "null"));
-            }
-
-            // Save the updated voucher if it's used
-            if (voucher != null) {
-                voucherRepository.save(voucher); // Save the updated voucher
+                voucher.setQty(updatedVoucherQty);
             }
         }
 
-        return order;
+        // Link the address to the Order
+        if (order.getAddress() != null && order.getAddress().getId() != 0) {
+            order.setAddress(addressRepository.findById(order.getAddress().getId())
+                    .orElseThrow(() -> new IllegalArgumentException(
+                            "Address does not exist with ID: " + order.getAddress().getId())));
+        }
+
+        // Save Order and OrderDetails
+        Order createdOrder = orderRepository.save(order);
+
+        // Build the order confirmation email content
+        StringBuilder emailBody = new StringBuilder("Thank you for your order!\n\n")
+                .append("Order ID: ").append(createdOrder.getId()).append("\n")
+                .append("Total Amount: ").append(order.getPrice()).append(" VND\n")
+                .append("Shipping to: ").append(order.getAddress().getAddress()).append("\n")
+                .append("Phone Number: ").append(order.getPhone()).append("\n\n")
+                .append("Order Details:\n");
+
+        for (OrderDetail detail : orderDetails) {
+            ProductVariant productVariant = detail.getProductVariant();
+            Product product = productVariant.getProduct(); // Ensure Product is fully loaded
+            emailBody.append("Product Name: ").append(product.getName())
+                    .append("\nDescription: ").append(product.getDescription())
+                    .append("\nPrice: ").append(detail.getPrice()).append(" VND")
+                    .append("\nQuantity: ").append(detail.getQuantity())
+                    .append("\n\n");
+        }
+
+        // Send confirmation email
+        if (order.getAddress() != null && order.getAddress().getUser() != null) {
+            String toEmail = order.getAddress().getUser().getEmail();
+            String subject = "Order Confirmation #" + createdOrder.getId();
+            emailService.sendEmail(toEmail, subject, emailBody.toString());
+        } else {
+            throw new MessagingException("Cannot send email because the user's email address does not exist.");
+        }
+
+        // Save the voucher if updated
+        if (voucher != null) {
+            voucherRepository.save(voucher);
+        }
+
+        return createdOrder;
     }
 
     // Get a list of all orders
-    public List<OrderResponseDTO> getAllOrders() {
-        return orderRepository.findAll(Sort.by(Sort.Direction.DESC, "id"))
-                .stream()
+    public List<OrderResponseDTO> getAllOrders(Integer status) {
+        List<Order> orders;
+
+        if (status != null) {
+            // Filter orders by status if the parameter is provided
+            orders = orderRepository.findByStatus(status, Sort.by(Sort.Direction.DESC, "id"));
+        } else {
+            // If no status is provided, fetch all orders
+            orders = orderRepository.findAll(Sort.by(Sort.Direction.DESC, "id"));
+        }
+
+        return orders.stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
     }
@@ -198,10 +193,12 @@ public class OrderService {
                 ProductVariant variant = orderDetail.getProductVariant();
                 if (variant != null && variant.getProduct() != null) {
                     Product product = variant.getProduct();
-                    System.out.println("xxxx " + product.getId());
+                    System.out.println("xxxx 123" + product.getId());
                     // Truy cập các trường của Product
                     product.getName();
+                    System.out.println("xxxx 123" + product.getName());
                     product.getImageUrls(); // Lấy thông tin hình ảnh nếu cần
+                    System.out.println("xxxx 123" + product.getImageUrls());
                 }
             });
         }

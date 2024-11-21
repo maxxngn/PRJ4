@@ -46,13 +46,14 @@ public class OrderController {
     }
 
     @GetMapping
-    public ResponseEntity<List<OrderResponseDTO>> getAllOrders() {
-        List<OrderResponseDTO> orders = orderService.getAllOrders();
+    public ResponseEntity<List<OrderResponseDTO>> getAllOrders(@RequestParam(required = false) Integer status) {
+        List<OrderResponseDTO> orders = orderService.getAllOrders(status);
         return ResponseEntity.ok(orders);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Order> getOrderById(@PathVariable int id) {
+        System.out.println("xxx");
         Order order = orderService.getOrderById(id);
         if (order != null) {
             return ResponseEntity.ok(order);

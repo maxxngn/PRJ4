@@ -114,10 +114,6 @@ public class ProductService {
         return productRepository.save(existingProduct);
     }
 
-    public ProductVariant getProductVariantWithProduct(int id) {
-        return productVariantRepository.findProductVariantWithProduct(id);
-    }
-
     // Lấy tên sản phẩm từ ProductVariant
     public String getProductNameFromVariant(int variantId) {
         ProductVariant productVariant = productVariantRepository.findById(variantId).orElse(null);

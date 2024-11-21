@@ -1,6 +1,0 @@
-<h1>Create Category</h1>
-<form th:action="@{/admin/categories}" th:object="${category}" method="post">
-  <label for="name">Name:</label>
-  <input type="text" id="name" th:field="*{name}" required />
-  <button type="submit">Create</button>
-</form>
