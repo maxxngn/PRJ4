@@ -44,7 +44,9 @@ public class AuthController {
         Optional<User> user = userService.login(username, password);
         if (user.isPresent()) {
             User loggedInUser = user.get();
+
             loggedInUser.setPassword(null);
+
             return ResponseEntity.ok(loggedInUser);
         }
         return ResponseEntity.status(401).body("Invalid credentials");
