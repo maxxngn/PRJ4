@@ -207,7 +207,7 @@ public class OrderService {
 
     public Order updateOrderStatus(int id) {
         Order order = orderRepository.findById(id).orElse(null);
-        if (order != null && order.getStatus() < 4) { // Giả sử status tối đa là 4
+        if (order != null && order.getStatus() < 5) { // Giả sử status tối đa là 4
             order.setStatus(order.getStatus() + 1);
             return orderRepository.save(order);
         }
@@ -245,5 +245,23 @@ public class OrderService {
         return orders.stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
+    }
+
+    public Order returnOrder(int id) {
+        Order order = orderRepository.findById(id).orElse(null);
+        if (order != null) {
+            order.setStatus(8);
+            return orderRepository.save(order);
+        }
+        return null;
+    }
+
+    public Order acceptReturnOrder(int id) {
+        Order order = orderRepository.findById(id).orElse(null);
+        if (order != null && order.getStatus() == 8) {
+            order.setStatus(9);
+            return orderRepository.save(order);
+        }
+        return null;
     }
 }

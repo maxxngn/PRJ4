@@ -115,4 +115,25 @@ public class OrderController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    // putmapping to return order
+    @PutMapping("/return/{id}")
+    public ResponseEntity<Order> returnOrder(@PathVariable int id) {
+        Order updatedOrder = orderService.returnOrder(id);
+        if (updatedOrder != null) {
+            return ResponseEntity.ok(updatedOrder);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PutMapping("/accept-return/{id}")
+    public ResponseEntity<Order> acceptReturnOrder(@PathVariable int id) {
+        Order updatedOrder = orderService.acceptReturnOrder(id);
+        if (updatedOrder != null) {
+            return ResponseEntity.ok(updatedOrder);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }

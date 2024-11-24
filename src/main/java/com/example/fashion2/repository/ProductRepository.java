@@ -27,8 +27,7 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
         @Query("SELECT p FROM Product p LEFT JOIN FETCH p.category WHERE " +
                         "(:name IS NULL OR p.name LIKE %:name%) AND " +
                         "(:gender IS NULL OR p.gender = :gender) AND " +
-                        "(:category IS NULL OR p.category.name = :category) AND " +
-                        "p.deleted_at IS NULL") // Filter products where deleted_at is null
+                        "(:category IS NULL OR p.category.name = :category) ") // Filter products where deleted_at is null
         Page<Product> findProductsByFilters(String name, String gender, String category, Pageable pageable);
 
         @Query("SELECT p FROM Product p " +

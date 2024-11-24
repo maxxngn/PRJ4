@@ -7,12 +7,13 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class VoucherService {
-    
+
     private final VoucherRepository voucherRepository;
 
     @Autowired
@@ -34,10 +35,16 @@ public class VoucherService {
 
     public Optional<Voucher> getVoucherByCode(String code) {
         Optional<Voucher> voucher = voucherRepository.findByCode(code);
-        // Check if voucher is present and if its quantity is greater than 0
-        if (voucher.isPresent() && voucher.get().getQty() == 0) {
-            return Optional.empty();  // Return empty Optional if quantity is 0
+
+        // Check if voucher is present, quantity is greater than 0, and not expired
+        if (voucher.isPresent()) {
+            Voucher v = voucher.get();
+            if (v.getQty() == 0 || (v.getExpirationDate() != null
+                    && v.getExpirationDate().toLocalDateTime().toLocalDate().isBefore(LocalDate.now()))) {
+                return Optional.empty(); // Return empty Optional if quantity is 0 or voucher is expired
+            }
         }
+
         return voucher;
     }
 
@@ -48,6 +55,8 @@ public class VoucherService {
         voucher.setQty(voucherDetails.getQty());
         voucher.setDescription(voucherDetails.getDescription());
         voucher.setStatus(voucherDetails.isStatus()); // Update status if provided
+        voucher.setExpirationDate(voucherDetails.getExpirationDate());
+        voucher.setMaxDiscount(voucherDetails.getMaxDiscount());
         return voucherRepository.save(voucher);
     }
 

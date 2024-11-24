@@ -1,7 +1,6 @@
 package com.example.fashion2.model;
 
 import java.sql.Timestamp;
-
 import jakarta.persistence.*;
 
 @Entity
@@ -16,17 +15,20 @@ public class Voucher {
     private int qty;
     private String description;
 
-    // New field
+    // New fields
     private boolean status; // true for active, false for inactive
+
+    @Column(columnDefinition = "TIMESTAMP DEFAULT NULL")
+    private Timestamp deleted_at; // Use java.sql.Timestamp
+
+    @Column(columnDefinition = "TIMESTAMP")
+    private Timestamp expirationDate; // Ngày hết hạn của voucher
+
+    private int maxDiscount; // Giảm giá tối đa cho voucher
 
     public Voucher() {
         this.status = true; // Set default status to true (active)
     }
-
-    // add deleted at timestamp column can null
-    @Column(columnDefinition = "TIMESTAMP DEFAULT NULL")
-    private Timestamp deleted_at;  // Use java.sql.Timestamp
-
 
     // Getters and Setters
     public int getId() { return id; }
@@ -49,4 +51,10 @@ public class Voucher {
 
     public Timestamp getDeleted_at() { return deleted_at; }
     public void setDeleted_at(Timestamp deleted_at) { this.deleted_at = deleted_at; }
+
+    public Timestamp getExpirationDate() { return expirationDate; }
+    public void setExpirationDate(Timestamp expirationDate) { this.expirationDate = expirationDate; }
+
+    public int getMaxDiscount() { return maxDiscount; }
+    public void setMaxDiscount(int maxDiscount) { this.maxDiscount = maxDiscount; }
 }
